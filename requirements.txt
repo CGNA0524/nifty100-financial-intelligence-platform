@@ -1,0 +1,10 @@
+pandas
+numpy
+openpyxl
+sqlalchemy
+pytest
+pytest-cov
+reportlab
+streamlit
+plotly
+matplotlib

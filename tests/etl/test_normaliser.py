@@ -5,7 +5,6 @@ sys.path.append(os.path.abspath("src/etl"))
 
 from normaliser import normalize_ticker, normalize_year
 
-
 # =========================
 # normalize_ticker Tests
 # =========================

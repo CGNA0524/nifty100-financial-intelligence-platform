@@ -1,15 +1,29 @@
 import pandas as pd
+import sqlite3
+import re
 from pathlib import Path
 
 RAW_PATH = Path("data/raw")
+DB_PATH = "db/nifty100.db"
 OUTPUT_PATH = Path("data/output")
 
 validation_errors = []
 
 
-def load_excel(filename):
-    return pd.read_excel(RAW_PATH / filename, header=1)
+##def load_excel(filename):
+   ## return pd.read_excel(RAW_PATH / filename, header=1)
+def load_table(table_name):
 
+    conn = sqlite3.connect(DB_PATH)
+
+    df = pd.read_sql(
+        f"SELECT * FROM {table_name}",
+        conn
+    )
+
+    conn.close()
+
+    return df
 
 # ==========================
 # DQ-01 : PK Uniqueness
@@ -157,18 +171,30 @@ def check_positive_sales(df):
 # ==========================
 def check_year_format(df, table_name):
 
+    valid_patterns = [
+        r"^\d{4}-\d{2}$",                 # 2024-03
+        r"^[A-Za-z]{3}\s\d{4}$",          # Mar 2024
+        r"^[A-Za-z]{3}\s\d{4}\s\d+[a-zA-Z]*$",  # Mar 2016 9m
+        r"^TTM$"
+    ]
+
     for _, row in df.iterrows():
 
-        year = str(row["year"])
+        year = str(row["year"]).strip()
 
-        if len(year.strip()) < 4:
+        is_valid = any(
+            re.match(pattern, year)
+            for pattern in valid_patterns
+        )
+
+        if not is_valid:
 
             validation_errors.append({
                 "dq_rule": "DQ-07",
                 "severity": "CRITICAL",
                 "table": table_name,
                 "record_id": row["company_id"],
-                "issue": "Invalid year format"
+                "issue": f"Invalid year format: {year}"
             })
 
 
@@ -386,15 +412,12 @@ if __name__ == "__main__":
     print("\nRunning Data Quality Checks...")
     print("=" * 60)
 
-    companies = load_excel("companies.xlsx")
-    profitandloss = load_excel("profitandloss.xlsx")
-    balancesheet = load_excel("balancesheet.xlsx")
-    cashflow = load_excel("cashflow.xlsx")
-    documents = load_excel("documents.xlsx")
-
-    financial_ratios = pd.read_excel(
-        RAW_PATH / "financial_ratios.xlsx"
-    )
+    companies = load_table("companies")
+    profitandloss = load_table("profitandloss")
+    balancesheet = load_table("balancesheet")
+    cashflow = load_table("cashflow")
+    documents = load_table("documents")
+    financial_ratios = load_table("financial_ratios")
 
     # -----------------------
     # DQ-01

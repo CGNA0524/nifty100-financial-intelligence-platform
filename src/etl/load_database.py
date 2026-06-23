@@ -1,7 +1,10 @@
 import sqlite3
 from pathlib import Path
 import pandas as pd
-
+from normaliser import (
+    normalize_ticker,
+    normalize_year
+)
 DB_PATH = Path("db/nifty100.db")
 RAW_PATH = Path("data/raw")
 OUTPUT_PATH = Path("data/output")
@@ -72,6 +75,13 @@ def load_profitandloss(conn):
     )
 
     df = filter_valid_company_ids(df)
+    df = df.drop_duplicates(
+    subset=["company_id", "year"],
+    keep="first"
+    )
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
+    if "year" in df.columns:
+        df["year"] = df["year"].apply(normalize_year)
 
     df.to_sql(
         "profitandloss",
@@ -95,6 +105,13 @@ def load_balancesheet(conn):
     )
 
     df = filter_valid_company_ids(df)
+    df = df.drop_duplicates(
+    subset=["company_id", "year"],
+    keep="first"
+    )
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
+    if "year" in df.columns:
+        df["year"] = df["year"].apply(normalize_year)
 
     df.to_sql(
         "balancesheet",
@@ -118,6 +135,13 @@ def load_cashflow(conn):
     )
 
     df = filter_valid_company_ids(df)
+    df = df.drop_duplicates(
+    subset=["company_id", "year"],
+    keep="first"
+    )
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
+    if "year" in df.columns:
+        df["year"] = df["year"].apply(normalize_year)
 
     df.to_sql(
         "cashflow",
@@ -141,6 +165,7 @@ def load_analysis(conn):
     )
 
     df = filter_valid_company_ids(df)
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
 
     df.to_sql(
         "analysis",
@@ -164,7 +189,7 @@ def load_documents(conn):
     )
 
     df = filter_valid_company_ids(df)
-
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
     df.to_sql(
         "documents",
         conn,
@@ -187,6 +212,7 @@ def load_prosandcons(conn):
     )
 
     df = filter_valid_company_ids(df)
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
 
     df.to_sql(
         "prosandcons",
@@ -272,7 +298,13 @@ def load_financial_ratios(conn):
     )
 
     df = filter_valid_company_ids(df)
-
+    df = df.drop_duplicates(
+    subset=["company_id", "year"],
+    keep="first"
+    )
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
+    if "year" in df.columns:
+        df["year"] = df["year"].apply(normalize_year)
     df.to_sql(
         "financial_ratios",
         conn,
@@ -295,7 +327,7 @@ def load_peer_groups(conn):
     )
 
     df = filter_valid_company_ids(df)
-
+    df["company_id"] = df["company_id"].apply(normalize_ticker)
     df.to_sql(
         "peer_groups",
         conn,

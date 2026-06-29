@@ -9,6 +9,13 @@ from src.analytics.ratios import (
     return_on_equity,
     return_on_capital_employed,
     return_on_assets,
+    debt_to_equity,
+    high_leverage_flag,
+    interest_coverage_ratio,
+    icr_label,
+    icr_warning_flag,
+    net_debt,
+    asset_turnover,
 )
 
 
@@ -59,3 +66,51 @@ def test_roce_financial():
     
 def test_return_on_assets_zero_assets():
     assert return_on_assets(100, 0) is None
+
+
+# -------------------------
+# Day 09 Tests
+# -------------------------
+
+def test_debt_to_equity():
+    assert debt_to_equity(100, 200, 300) == 0.20
+
+
+def test_debt_to_equity_debt_free():
+    assert debt_to_equity(0, 200, 300) == 0.0
+
+
+def test_high_leverage_flag():
+    assert high_leverage_flag(6.0, "IT") is True
+
+
+def test_high_leverage_financial():
+    assert high_leverage_flag(10.0, "Financials") is False
+
+
+def test_interest_coverage_ratio():
+    assert interest_coverage_ratio(200, 50, 50) == 5.0
+
+
+def test_interest_coverage_zero_interest():
+    assert interest_coverage_ratio(200, 50, 0) is None
+
+
+def test_icr_label():
+    assert icr_label(0) == "Debt Free"
+
+
+def test_icr_warning():
+    assert icr_warning_flag(1.2) is True
+
+
+def test_net_debt():
+    assert net_debt(500, 100) == 400
+
+
+def test_asset_turnover():
+    assert asset_turnover(1000, 500) == 2.0
+
+
+def test_asset_turnover_zero_assets():
+    assert asset_turnover(1000, 0) is None

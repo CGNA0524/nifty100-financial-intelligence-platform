@@ -120,3 +120,108 @@ def return_on_assets(
         return None
 
     return round((net_profit / total_assets) * 100, 2)
+
+def debt_to_equity(
+    borrowings: float,
+    equity_capital: float,
+    reserves: float
+) -> Optional[float]:
+    """
+    Debt to Equity Ratio
+    """
+
+    if borrowings == 0:
+        return 0.0
+
+    equity = equity_capital + reserves
+
+    if equity <= 0:
+        return None
+
+    return round(borrowings / equity, 2)
+
+
+def high_leverage_flag(
+    debt_equity: Optional[float],
+    broad_sector: str
+) -> bool:
+    """
+    Returns True if D/E > 5 and company is not Financials.
+    """
+
+    if debt_equity is None:
+        return False
+
+    if is_financial_company(broad_sector):
+        return False
+
+    return debt_equity > 5
+
+def interest_coverage_ratio(
+    operating_profit: float,
+    other_income: float,
+    interest: float
+) -> Optional[float]:
+    """
+    Interest Coverage Ratio (ICR)
+
+    Formula:
+    (Operating Profit + Other Income) / Interest
+    """
+
+    if interest == 0:
+        return None
+
+    return round((operating_profit + other_income) / interest, 2)
+
+
+def icr_label(interest: float) -> str:
+    """
+    Return label for Interest Coverage Ratio.
+    """
+
+    if interest == 0:
+        return "Debt Free"
+
+    return "Has Debt"
+
+
+def icr_warning_flag(icr: Optional[float]) -> bool:
+    """
+    Warning if Interest Coverage Ratio is below 1.5
+    """
+
+    if icr is None:
+        return False
+
+    return icr < 1.5
+
+def net_debt(
+    borrowings: float,
+    investments: float
+) -> float:
+    """
+    Net Debt
+
+    Formula:
+    Borrowings - Investments
+    """
+
+    return round(borrowings - investments, 2)
+
+
+def asset_turnover(
+    sales: float,
+    total_assets: float
+) -> Optional[float]:
+    """
+    Asset Turnover
+
+    Formula:
+    Sales / Total Assets
+    """
+
+    if total_assets == 0:
+        return None
+
+    return round(sales / total_assets, 2)

@@ -94,7 +94,12 @@ def is_financial_company(broad_sector: str) -> bool:
     """
     Check whether the company belongs to Financials sector.
     """
+    if not broad_sector:
+        return False
+
     return broad_sector.strip().lower() == "financials"
+
+
 def roce_status(roce: float, broad_sector: str) -> str:
     """
     Returns benchmark type for ROCE.
@@ -225,3 +230,146 @@ def asset_turnover(
         return None
 
     return round(sales / total_assets, 2)
+
+
+def free_cash_flow(
+    operating_activity: float,
+    investing_activity: float
+) -> float:
+    """
+    Free Cash Flow (FCF)
+
+    Formula:
+    CFO + Investing Activity
+
+    Investing Activity is generally negative.
+    Negative FCF is allowed.
+    """
+
+    return round(operating_activity + investing_activity, 2)
+
+
+
+def cfo_quality_score(
+    avg_cfo: float,
+    avg_pat: float
+) -> Optional[tuple[float, str]]:
+    """
+    CFO Quality Score
+
+    Formula:
+    Average CFO / Average PAT (5-year average)
+
+    >1.0  -> High Quality
+    0.5-1 -> Moderate
+    <0.5  -> Accrual Risk
+
+    Return None if PAT is zero.
+    """
+
+    if avg_pat == 0:
+        return None
+
+    score = round(avg_cfo / avg_pat, 2)
+
+    if score > 1.0:
+        label = "High Quality"
+    elif score >= 0.5:
+        label = "Moderate"
+    else:
+        label = "Accrual Risk"
+
+    return score, label
+
+
+def capex_intensity(
+    investing_activity: float,
+    sales: float
+) -> Optional[tuple[float, str]]:
+    """
+    CapEx Intensity
+
+    Formula:
+    abs(Investing Activity) / Sales * 100
+
+    <3%  -> Asset Light
+    3-8% -> Moderate
+    >8%  -> Capital Intensive
+    """
+
+    if sales == 0:
+        return None
+
+    intensity = round((abs(investing_activity) / sales) * 100, 2)
+
+    if intensity < 3:
+        label = "Asset Light"
+    elif intensity <= 8:
+        label = "Moderate"
+    else:
+        label = "Capital Intensive"
+
+    return intensity, label
+
+def fcf_conversion_rate(
+    free_cash_flow: float,
+    operating_profit: float
+) -> Optional[float]:
+    """
+    FCF Conversion Rate
+
+    Formula:
+    FCF / Operating Profit * 100
+
+    Return None if Operating Profit is zero.
+    """
+
+    if operating_profit == 0:
+        return None
+
+    return round((free_cash_flow / operating_profit) * 100, 2)
+
+def capital_allocation_pattern(
+    operating_activity: float,
+    investing_activity: float,
+    financing_activity: float,
+    cfo_pat_ratio: Optional[float] = None
+) -> str:
+    """
+    Capital Allocation Pattern Classifier
+
+    CFO  = Operating Activity
+    CFI  = Investing Activity
+    CFF  = Financing Activity
+    """
+
+    cfo = "+" if operating_activity >= 0 else "-"
+    cfi = "+" if investing_activity >= 0 else "-"
+    cff = "+" if financing_activity >= 0 else "-"
+
+    pattern = (cfo, cfi, cff)
+
+    if pattern == ("+", "-", "-"):
+        if cfo_pat_ratio is not None and cfo_pat_ratio > 1.0:
+            return "Shareholder Returns"
+        return "Reinvestor"
+
+    elif pattern == ("+", "+", "-"):
+        return "Liquidating Assets"
+
+    elif pattern == ("-", "+", "+"):
+        return "Distress Signal"
+
+    elif pattern == ("-", "-", "+"):
+        return "Growth Funded by Debt"
+
+    elif pattern == ("+", "+", "+"):
+        return "Cash Accumulator"
+
+    elif pattern == ("-", "-", "-"):
+        return "Pre-Revenue"
+
+    elif pattern == ("+", "-", "+"):
+        return "Mixed"
+
+    return "Unknown"

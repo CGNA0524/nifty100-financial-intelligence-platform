@@ -122,3 +122,14 @@ def eps_cagr(
     EPS CAGR
     """
     return calculate_cagr(start_eps, end_eps, years)
+
+
+def free_cash_flow_cagr(
+    start_fcf: float,
+    end_fcf: float,
+    years: int
+) -> Tuple[Optional[float], Optional[str]]:
+    """
+    Free Cash Flow CAGR
+    """
+    return calculate_cagr(start_fcf, end_fcf, years)

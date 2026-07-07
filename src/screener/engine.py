@@ -2,6 +2,8 @@ import sqlite3
 import yaml
 import pandas as pd
 
+from export import create_screener_workbook
+
 DB_PATH = "db/nifty100.db"
 
 
@@ -13,7 +15,8 @@ def load_financial_ratios():
     SELECT
         fr.company_id,
         fr.year,
-
+        fr.cash_from_operations_cr,
+        fr.net_profit_margin_pct,
         fr.return_on_equity_pct,
         fr.debt_to_equity,
         fr.interest_coverage,
@@ -22,7 +25,7 @@ def load_financial_ratios():
         fr.revenue_cagr_5yr,
         fr.pat_cagr_5yr,
         fr.eps_cagr_5yr,
-        fr.composite_quality_score,
+       /* fr.composite_quality_score, */
 
         c.roce_percentage,
 
@@ -165,6 +168,94 @@ def get_debt_declining_companies():
 
     return declining
 
+def winsorize(series):
+
+    p10 = series.quantile(0.10)
+    p90 = series.quantile(0.90)
+
+    return series.clip(lower=p10, upper=p90)
+
+def normalize(series):
+
+    minimum = series.min()
+    maximum = series.max()
+
+    if maximum == minimum:
+        return pd.Series(50, index=series.index)
+
+    return ((series - minimum) / (maximum - minimum)) * 100
+
+
+def calculate_composite_score(df):
+
+    df = df.copy()
+
+    roe = winsorize(df["return_on_equity_pct"].fillna(0))
+    roe = normalize(roe)
+
+    roce = winsorize(df["roce_percentage"].fillna(0))
+    roce = normalize(roce)
+
+    revenue_cagr = winsorize(df["revenue_cagr_5yr"].fillna(0))
+    revenue_cagr = normalize(revenue_cagr)
+
+    pat_cagr = winsorize(df["pat_cagr_5yr"].fillna(0))
+    pat_cagr = normalize(pat_cagr)
+
+    npm = winsorize(df["net_profit_margin_pct"].fillna(0))
+    npm = normalize(npm)
+
+    de = winsorize(df["debt_to_equity"].fillna(0))
+    de = normalize(de)
+    # Lower Debt/Equity is better
+    de = 100 - de
+    icr = winsorize(
+        df["interest_coverage"]
+          .replace(float("inf"), 999)
+          .fillna(0)
+    )
+    icr = normalize(icr)
+    # Temporary placeholders
+    fcf_cagr = pd.Series(50, index=df.index)
+    cfo_pat_ratio = pd.Series(50, index=df.index)
+    fcf_positive = (
+        (df["free_cash_flow_cr"] > 0)
+        .astype(int) * 100
+    )
+    df["composite_quality_score"] = (
+    roe * 0.15 +
+    roce * 0.10 +
+    npm * 0.10 +
+    fcf_cagr * 0.15 +
+    cfo_pat_ratio * 0.10 +
+    fcf_positive * 0.05 +
+    revenue_cagr * 0.10 +
+    pat_cagr * 0.10 +
+    de * 0.10 +
+    icr * 0.05
+)
+    df["composite_quality_score"] = (
+    df["composite_quality_score"]
+    .round(2)
+ )
+    return df
+def calculate_sector_relative_score(df):
+
+    df = df.copy()
+
+    df["sector_relative_score"] = (
+        df.groupby("broad_sector")[
+            "composite_quality_score"
+        ].transform(normalize)
+    )
+
+    df["sector_relative_score"] = (
+        df["sector_relative_score"]
+        .round(2)
+    )
+
+    return df
+
 def apply_screener(df, filters):
 
     result = df.copy()
@@ -212,6 +303,10 @@ def apply_screener(df, filters):
 def main():
 
     df = load_financial_ratios()
+    
+
+    df = calculate_composite_score(df)
+    df = calculate_sector_relative_score(df)
 
     revenue_cagr = get_revenue_cagr_3yr()
     df["revenue_cagr_3yr"] = df["company_id"].map(revenue_cagr)
@@ -219,15 +314,42 @@ def main():
     debt_declining = get_debt_declining_companies()
 
     config = load_config()
-
+    
+    export_columns = [
+        "company_id",
+        "year",
+        "return_on_equity_pct",
+        "roce_percentage",
+        "net_profit_margin_pct",
+        "opm_percentage",
+        "debt_to_equity",
+        "interest_coverage",
+        "asset_turnover",
+        "free_cash_flow_cr",
+        "cash_from_operations_cr",
+        "revenue_cagr_5yr",
+        "pat_cagr_5yr",
+        "eps_cagr_5yr",
+        "market_cap_crore",
+        "pe_ratio",
+        "pb_ratio",
+        "dividend_yield_pct",
+        "dividend_payout_ratio_pct",
+        "sales",
+        "net_profit",
+        "broad_sector",
+        "composite_quality_score",
+        "sector_relative_score"
+    ]
+    all_results = {}
     for screener_name, filters in config.items():
 
         result = apply_screener(df, filters)
-        
         if screener_name == "turnaround_watch":
             result = result[
                 result["company_id"].isin(debt_declining)
                 ]
+            result = result.reindex(columns=export_columns)
 
         print("=" * 50)
         print("Screener :", screener_name)
@@ -240,17 +362,22 @@ def main():
                 "company_id",
                 "return_on_equity_pct",
                 "debt_to_equity",
-                "composite_quality_score"
+                "composite_quality_score",
+                "sector_relative_score"
             ]].head())
 
-        # Excel Export
-        result.to_excel(
-            f"output/{screener_name}.xlsx",
-            index=False
-        )
+
+
+
+        all_results[screener_name] = result
 
         print(f"✅ {screener_name}.xlsx generated")
 
+    # Create single workbook after all screeners finish
+    create_screener_workbook(all_results)
+
     print("\n✅ All Screeners Generated Successfully!")
+
+
 if __name__ == "__main__":
     main()

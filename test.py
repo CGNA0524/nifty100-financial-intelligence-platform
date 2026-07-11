@@ -3,11 +3,13 @@ import pandas as pd
 
 conn = sqlite3.connect("db/nifty100.db")
 
-print(
-    pd.read_sql(
-        "PRAGMA table_info(companies)",
-        conn
-    )
-)
+print(pd.read_sql("""
+
+SELECT COUNT(*)
+AS total_rows
+
+FROM peer_percentiles
+
+""", conn))
 
 conn.close()

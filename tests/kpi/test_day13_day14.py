@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from src.analytics.cagr import eps_cagr_5yr, pat_cagr_5yr, revenue_cagr_5yr
+from src.analytics.ratio_engine import RatioEngine
 from src.analytics.ratios import (
     asset_turnover,
     capex_intensity,
@@ -19,7 +20,6 @@ from src.analytics.ratios import (
     return_on_capital_employed,
     return_on_equity,
 )
-from src.analytics.ratio_engine import RatioEngine
 
 
 def build_synthetic_engine() -> RatioEngine:
@@ -32,7 +32,9 @@ def build_synthetic_engine() -> RatioEngine:
     return engine
 
 
-def make_record(year: int, sales: float, net_profit: float, operating_profit: float) -> dict:
+def make_record(
+    year: int, sales: float, net_profit: float, operating_profit: float
+) -> dict:
     """Create a synthetic merged record for engine testing."""
 
     return {

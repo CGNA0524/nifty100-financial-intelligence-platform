@@ -1,0 +1,23 @@
+cluster_id,cluster_name,broad_sector,companies
+0,Value Cyclicals,Financials,7
+0,Value Cyclicals,Energy,1
+1,High Quality Compounders,Industrials,2
+2,Emerging Growth,Consumer Discretionary,12
+2,Emerging Growth,Energy,11
+2,Emerging Growth,Industrials,7
+2,Emerging Growth,Materials,7
+2,Emerging Growth,Consumer Staples,6
+2,Emerging Growth,Healthcare,5
+2,Emerging Growth,Information Technology,5
+2,Emerging Growth,Financials,3
+2,Emerging Growth,Real Estate,2
+2,Emerging Growth,Communication Services,1
+3,Turnaround Candidates,Financials,6
+4,Defensive Leaders,Financials,6
+4,Defensive Leaders,Consumer Discretionary,2
+4,Defensive Leaders,Materials,2
+4,Defensive Leaders,Communication Services,1
+4,Defensive Leaders,Consumer Staples,1
+4,Defensive Leaders,Energy,1
+4,Defensive Leaders,Healthcare,1
+4,Defensive Leaders,Industrials,1

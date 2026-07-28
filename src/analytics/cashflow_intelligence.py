@@ -1,5 +1,6 @@
-from pathlib import Path
 import sqlite3
+from pathlib import Path
+
 import pandas as pd
 
 # =====================================================
@@ -52,12 +53,7 @@ def main():
     print("\nRows Loaded :", len(df))
 
     # Keep latest record for each company
-    latest = (
-        df
-        .sort_values("year")
-        .groupby("company_id", as_index=False)
-        .last()
-    )
+    latest = df.sort_values("year").groupby("company_id", as_index=False).last()
 
     print("Latest Company Records :", len(latest))
 
@@ -99,11 +95,13 @@ def main():
             else:
                 insights.append("Cash Balance Declined")
 
-        generated_rows.append({
-            "company_id": row["company_id"],
-            "year": row["year"],
-            "cashflow_insights": "; ".join(insights)
-        })
+        generated_rows.append(
+            {
+                "company_id": row["company_id"],
+                "year": row["year"],
+                "cashflow_insights": "; ".join(insights),
+            }
+        )
 
     # ==========================================
     # Save Output
@@ -111,10 +109,7 @@ def main():
 
     output_df = pd.DataFrame(generated_rows)
 
-    output_df.to_excel(
-        OUTPUT_FILE,
-        index=False
-    )
+    output_df.to_excel(OUTPUT_FILE, index=False)
 
     print("\nGenerated Companies :", len(output_df))
 
@@ -130,10 +125,7 @@ def main():
 
     conn = sqlite3.connect(DB_PATH)
 
-    companies = pd.read_sql(
-        "SELECT id FROM companies",
-        conn
-    )
+    companies = pd.read_sql("SELECT id FROM companies", conn)
 
     conn.close()
 
@@ -166,6 +158,7 @@ def main():
             else:
                 print(temp)
                 print()
+
 
 if __name__ == "__main__":
     main()

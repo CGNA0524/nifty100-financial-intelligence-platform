@@ -1,6 +1,6 @@
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
 
 RAW_DATA_PATH = Path("data/raw")
 
@@ -34,7 +34,7 @@ def load_all_files():
         "stock_prices.xlsx",
         "market_cap.xlsx",
         "financial_ratios.xlsx",
-        "peer_groups.xlsx"
+        "peer_groups.xlsx",
     ]
 
     datasets = {}
@@ -48,9 +48,7 @@ def load_all_files():
 
             datasets[file] = df
 
-            print(
-                f"SUCCESS | {file:<25} Rows: {df.shape[0]:<6} Columns: {df.shape[1]}"
-            )
+            print(f"SUCCESS | {file:<25} Rows: {df.shape[0]:<6} Columns: {df.shape[1]}")
 
         except Exception as e:
             print(f"ERROR   | {file} -> {e}")

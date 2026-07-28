@@ -1,5 +1,6 @@
-from pathlib import Path
 import sqlite3
+from pathlib import Path
+
 import pandas as pd
 
 # =====================================================
@@ -17,6 +18,7 @@ OUTPUT_FILE = OUTPUT_DIR / "executive_summary.xlsx"
 # =====================================================
 # Load Executive Data
 # =====================================================
+
 
 def load_summary():
 
@@ -48,6 +50,7 @@ def load_summary():
 # Main
 # =====================================================
 
+
 def main():
 
     print("=" * 60)
@@ -67,25 +70,24 @@ def main():
     avg_roe = summary["roe_percentage"].mean()
     avg_roce = summary["roce_percentage"].mean()
 
-    executive_summary = pd.DataFrame({
-        "Metric": [
-            "Total Companies",
-            "Total Sectors",
-            "Average ROE (%)",
-            "Average ROCE (%)"
-        ],
-        "Value": [
-            total_companies,
-            total_sectors,
-            round(avg_roe, 2),
-            round(avg_roce, 2)
-        ]
-    })
-
-    executive_summary.to_excel(
-        OUTPUT_FILE,
-        index=False
+    executive_summary = pd.DataFrame(
+        {
+            "Metric": [
+                "Total Companies",
+                "Total Sectors",
+                "Average ROE (%)",
+                "Average ROCE (%)",
+            ],
+            "Value": [
+                total_companies,
+                total_sectors,
+                round(avg_roe, 2),
+                round(avg_roce, 2),
+            ],
+        }
     )
+
+    executive_summary.to_excel(OUTPUT_FILE, index=False)
 
     print("\nExecutive Summary\n")
     print(executive_summary)

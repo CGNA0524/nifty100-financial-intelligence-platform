@@ -47,7 +47,7 @@ def normalize_year(year):
         "Sep": "09",
         "Oct": "10",
         "Nov": "11",
-        "Dec": "12"
+        "Dec": "12",
     }
 
     return f"{full_year}-{month_map.get(month, '01')}"

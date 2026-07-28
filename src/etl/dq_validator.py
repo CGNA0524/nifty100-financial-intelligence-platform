@@ -1,7 +1,8 @@
-import pandas as pd
-import sqlite3
 import re
+import sqlite3
 from pathlib import Path
+
+import pandas as pd
 
 RAW_PATH = Path("data/raw")
 DB_PATH = "db/nifty100.db"
@@ -11,19 +12,17 @@ validation_errors = []
 
 
 ##def load_excel(filename):
-   ## return pd.read_excel(RAW_PATH / filename, header=1)
+## return pd.read_excel(RAW_PATH / filename, header=1)
 def load_table(table_name):
 
     conn = sqlite3.connect(DB_PATH)
 
-    df = pd.read_sql(
-        f"SELECT * FROM {table_name}",
-        conn
-    )
+    df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
 
     conn.close()
 
     return df
+
 
 # ==========================
 # DQ-01 : PK Uniqueness
@@ -35,13 +34,15 @@ def check_pk_uniqueness(df, table_name):
     if not duplicates.empty:
         for _, row in duplicates.iterrows():
 
-            validation_errors.append({
-                "dq_rule": "DQ-01",
-                "severity": "CRITICAL",
-                "table": table_name,
-                "record_id": row["id"],
-                "issue": "Duplicate Primary Key"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-01",
+                    "severity": "CRITICAL",
+                    "table": table_name,
+                    "record_id": row["id"],
+                    "issue": "Duplicate Primary Key",
+                }
+            )
 
 
 # ==========================
@@ -50,23 +51,20 @@ def check_pk_uniqueness(df, table_name):
 # ==========================
 def check_company_year_uniqueness(df, table_name):
 
-    duplicates = df[
-        df.duplicated(
-            subset=["company_id", "year"],
-            keep=False
-        )
-    ]
+    duplicates = df[df.duplicated(subset=["company_id", "year"], keep=False)]
 
     if not duplicates.empty:
         for _, row in duplicates.iterrows():
 
-            validation_errors.append({
-                "dq_rule": "DQ-02",
-                "severity": "CRITICAL",
-                "table": table_name,
-                "record_id": row["company_id"],
-                "issue": f"Duplicate company_id-year ({row['year']})"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-02",
+                    "severity": "CRITICAL",
+                    "table": table_name,
+                    "record_id": row["company_id"],
+                    "issue": f"Duplicate company_id-year ({row['year']})",
+                }
+            )
 
 
 # ==========================
@@ -76,20 +74,20 @@ def check_fk_integrity(df, companies_df, table_name):
 
     valid_company_ids = set(companies_df["id"])
 
-    invalid_rows = df[
-        ~df["company_id"].isin(valid_company_ids)
-    ]
+    invalid_rows = df[~df["company_id"].isin(valid_company_ids)]
 
     if not invalid_rows.empty:
         for _, row in invalid_rows.iterrows():
 
-            validation_errors.append({
-                "dq_rule": "DQ-03",
-                "severity": "CRITICAL",
-                "table": table_name,
-                "record_id": row["company_id"],
-                "issue": "Foreign Key Not Found"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-03",
+                    "severity": "CRITICAL",
+                    "table": table_name,
+                    "record_id": row["company_id"],
+                    "issue": "Foreign Key Not Found",
+                }
+            )
 
 
 # ==========================
@@ -113,13 +111,16 @@ def check_balance_sheet_balance(df):
 
         if diff_pct > 0.01:
 
-            validation_errors.append({
-                "dq_rule": "DQ-04",
-                "severity": "WARNING",
-                "table": "balancesheet",
-                "record_id": row["id"],
-                "issue": "Assets and Liabilities mismatch > 1%"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-04",
+                    "severity": "WARNING",
+                    "table": "balancesheet",
+                    "record_id": row["id"],
+                    "issue": "Assets and Liabilities mismatch > 1%",
+                }
+            )
+
 
 # ==========================
 # DQ-05 : OPM Cross Check
@@ -133,19 +134,19 @@ def check_opm_cross_check(df):
         if pd.isna(sales) or sales == 0:
             continue
 
-        calculated_opm = (
-            row["operating_profit"] / sales
-        ) * 100
+        calculated_opm = (row["operating_profit"] / sales) * 100
 
         if abs(calculated_opm - row["opm_percentage"]) > 1:
 
-            validation_errors.append({
-                "dq_rule": "DQ-05",
-                "severity": "WARNING",
-                "table": "profitandloss",
-                "record_id": row["company_id"],
-                "issue": "OPM mismatch"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-05",
+                    "severity": "WARNING",
+                    "table": "profitandloss",
+                    "record_id": row["company_id"],
+                    "issue": "OPM mismatch",
+                }
+            )
 
 
 # ==========================
@@ -157,13 +158,15 @@ def check_positive_sales(df):
 
     for _, row in invalid.iterrows():
 
-        validation_errors.append({
-            "dq_rule": "DQ-06",
-            "severity": "WARNING",
-            "table": "profitandloss",
-            "record_id": row["company_id"],
-            "issue": "Sales <= 0"
-        })
+        validation_errors.append(
+            {
+                "dq_rule": "DQ-06",
+                "severity": "WARNING",
+                "table": "profitandloss",
+                "record_id": row["company_id"],
+                "issue": "Sales <= 0",
+            }
+        )
 
 
 # ==========================
@@ -172,30 +175,29 @@ def check_positive_sales(df):
 def check_year_format(df, table_name):
 
     valid_patterns = [
-        r"^\d{4}-\d{2}$",                 # 2024-03
-        r"^[A-Za-z]{3}\s\d{4}$",          # Mar 2024
+        r"^\d{4}-\d{2}$",  # 2024-03
+        r"^[A-Za-z]{3}\s\d{4}$",  # Mar 2024
         r"^[A-Za-z]{3}\s\d{4}\s\d+[a-zA-Z]*$",  # Mar 2016 9m
-        r"^TTM$"
+        r"^TTM$",
     ]
 
     for _, row in df.iterrows():
 
         year = str(row["year"]).strip()
 
-        is_valid = any(
-            re.match(pattern, year)
-            for pattern in valid_patterns
-        )
+        is_valid = any(re.match(pattern, year) for pattern in valid_patterns)
 
         if not is_valid:
 
-            validation_errors.append({
-                "dq_rule": "DQ-07",
-                "severity": "CRITICAL",
-                "table": table_name,
-                "record_id": row["company_id"],
-                "issue": f"Invalid year format: {year}"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-07",
+                    "severity": "CRITICAL",
+                    "table": table_name,
+                    "record_id": row["company_id"],
+                    "issue": f"Invalid year format: {year}",
+                }
+            )
 
 
 # ==========================
@@ -209,13 +211,15 @@ def check_ticker_format(df, table_name):
 
         if len(ticker) < 2 or len(ticker) > 15:
 
-            validation_errors.append({
-                "dq_rule": "DQ-08",
-                "severity": "CRITICAL",
-                "table": table_name,
-                "record_id": ticker,
-                "issue": "Invalid ticker format"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-08",
+                    "severity": "CRITICAL",
+                    "table": table_name,
+                    "record_id": ticker,
+                    "issue": "Invalid ticker format",
+                }
+            )
 
 
 # ==========================
@@ -233,13 +237,15 @@ def check_net_cash(df):
 
         if abs(calculated - row["net_cash_flow"]) > 10:
 
-            validation_errors.append({
-                "dq_rule": "DQ-09",
-                "severity": "WARNING",
-                "table": "cashflow",
-                "record_id": row["company_id"],
-                "issue": "Net cash mismatch"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-09",
+                    "severity": "WARNING",
+                    "table": "cashflow",
+                    "record_id": row["company_id"],
+                    "issue": "Net cash mismatch",
+                }
+            )
 
 
 # ==========================
@@ -251,13 +257,15 @@ def check_fixed_assets(df):
 
     for _, row in invalid.iterrows():
 
-        validation_errors.append({
-            "dq_rule": "DQ-10",
-            "severity": "WARNING",
-            "table": "balancesheet",
-            "record_id": row["company_id"],
-            "issue": "Negative fixed assets"
-        })
+        validation_errors.append(
+            {
+                "dq_rule": "DQ-10",
+                "severity": "WARNING",
+                "table": "balancesheet",
+                "record_id": row["company_id"],
+                "issue": "Negative fixed assets",
+            }
+        )
 
 
 # ==========================
@@ -265,21 +273,19 @@ def check_fixed_assets(df):
 # ==========================
 def check_tax_range(df):
 
-    invalid = df[
-        (df["tax_percentage"] < 0)
-        |
-        (df["tax_percentage"] > 60)
-    ]
+    invalid = df[(df["tax_percentage"] < 0) | (df["tax_percentage"] > 60)]
 
     for _, row in invalid.iterrows():
 
-        validation_errors.append({
-            "dq_rule": "DQ-11",
-            "severity": "WARNING",
-            "table": "profitandloss",
-            "record_id": row["company_id"],
-            "issue": "Invalid tax percentage"
-        })
+        validation_errors.append(
+            {
+                "dq_rule": "DQ-11",
+                "severity": "WARNING",
+                "table": "profitandloss",
+                "record_id": row["company_id"],
+                "issue": "Invalid tax percentage",
+            }
+        )
 
 
 # ==========================
@@ -291,13 +297,15 @@ def check_dividend_cap(df):
 
     for _, row in invalid.iterrows():
 
-        validation_errors.append({
-            "dq_rule": "DQ-12",
-            "severity": "WARNING",
-            "table": "profitandloss",
-            "record_id": row["company_id"],
-            "issue": "Dividend payout > 200%"
-        })
+        validation_errors.append(
+            {
+                "dq_rule": "DQ-12",
+                "severity": "WARNING",
+                "table": "profitandloss",
+                "record_id": row["company_id"],
+                "issue": "Dividend payout > 200%",
+            }
+        )
 
 
 # ==========================
@@ -305,12 +313,7 @@ def check_dividend_cap(df):
 # ==========================
 def check_urls(companies, documents):
 
-    url_cols = [
-        "website",
-        "nse_profile",
-        "bse_profile",
-        "chart_link"
-    ]
+    url_cols = ["website", "nse_profile", "bse_profile", "chart_link"]
 
     for col in url_cols:
 
@@ -320,13 +323,15 @@ def check_urls(companies, documents):
 
             if not value.startswith("http"):
 
-                validation_errors.append({
-                    "dq_rule": "DQ-13",
-                    "severity": "WARNING",
-                    "table": "companies",
-                    "record_id": row["id"],
-                    "issue": f"Invalid {col}"
-                })
+                validation_errors.append(
+                    {
+                        "dq_rule": "DQ-13",
+                        "severity": "WARNING",
+                        "table": "companies",
+                        "record_id": row["id"],
+                        "issue": f"Invalid {col}",
+                    }
+                )
 
     for _, row in documents.iterrows():
 
@@ -334,13 +339,15 @@ def check_urls(companies, documents):
 
         if not value.startswith("http"):
 
-            validation_errors.append({
-                "dq_rule": "DQ-13",
-                "severity": "WARNING",
-                "table": "documents",
-                "record_id": row["company_id"],
-                "issue": "Invalid Annual Report URL"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-13",
+                    "severity": "WARNING",
+                    "table": "documents",
+                    "record_id": row["company_id"],
+                    "issue": "Invalid Annual Report URL",
+                }
+            )
 
 
 # ==========================
@@ -348,21 +355,19 @@ def check_urls(companies, documents):
 # ==========================
 def check_eps_sign(df):
 
-    invalid = df[
-        (df["net_profit"] > 0)
-        &
-        (df["eps"] <= 0)
-    ]
+    invalid = df[(df["net_profit"] > 0) & (df["eps"] <= 0)]
 
     for _, row in invalid.iterrows():
 
-        validation_errors.append({
-            "dq_rule": "DQ-14",
-            "severity": "WARNING",
-            "table": "profitandloss",
-            "record_id": row["company_id"],
-            "issue": "EPS sign inconsistent"
-        })
+        validation_errors.append(
+            {
+                "dq_rule": "DQ-14",
+                "severity": "WARNING",
+                "table": "profitandloss",
+                "record_id": row["company_id"],
+                "issue": "EPS sign inconsistent",
+            }
+        )
 
 
 # ==========================
@@ -374,13 +379,15 @@ def check_bse_balance(df):
 
         if row["total_assets"] != row["total_liabilities"]:
 
-            validation_errors.append({
-                "dq_rule": "DQ-15",
-                "severity": "INFO",
-                "table": "balancesheet",
-                "record_id": row["company_id"],
-                "issue": "Assets != Liabilities"
-            })
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-15",
+                    "severity": "INFO",
+                    "table": "balancesheet",
+                    "record_id": row["company_id"],
+                    "issue": "Assets != Liabilities",
+                }
+            )
 
 
 # ==========================
@@ -394,14 +401,15 @@ def check_coverage(df):
 
         if count < 5:
 
-            validation_errors.append({
-                "dq_rule": "DQ-16",
-                "severity": "WARNING",
-                "table": "profitandloss",
-                "record_id": company,
-                "issue": "Less than 5 years coverage"
-            })
-
+            validation_errors.append(
+                {
+                    "dq_rule": "DQ-16",
+                    "severity": "WARNING",
+                    "table": "profitandloss",
+                    "record_id": company,
+                    "issue": "Less than 5 years coverage",
+                }
+            )
 
 
 # ==========================
@@ -431,59 +439,29 @@ if __name__ == "__main__":
     # -----------------------
     # DQ-02
     # -----------------------
-    check_company_year_uniqueness(
-        profitandloss,
-        "profitandloss"
-    )
+    check_company_year_uniqueness(profitandloss, "profitandloss")
 
-    check_company_year_uniqueness(
-        balancesheet,
-        "balancesheet"
-    )
+    check_company_year_uniqueness(balancesheet, "balancesheet")
 
-    check_company_year_uniqueness(
-        cashflow,
-        "cashflow"
-    )
+    check_company_year_uniqueness(cashflow, "cashflow")
 
-    check_company_year_uniqueness(
-        financial_ratios,
-        "financial_ratios"
-    )   
+    check_company_year_uniqueness(financial_ratios, "financial_ratios")
 
     # -----------------------
     # DQ-03
     # -----------------------
-    check_fk_integrity(
-        profitandloss,
-        companies,
-        "profitandloss"
-    )
+    check_fk_integrity(profitandloss, companies, "profitandloss")
 
-    check_fk_integrity(
-        balancesheet,
-        companies,
-        "balancesheet"
-    )
+    check_fk_integrity(balancesheet, companies, "balancesheet")
 
-    check_fk_integrity(
-        cashflow,
-        companies,
-        "cashflow"
-    )
+    check_fk_integrity(cashflow, companies, "cashflow")
 
-    check_fk_integrity(
-        financial_ratios,
-        companies,
-        "financial_ratios"
-    )
+    check_fk_integrity(financial_ratios, companies, "financial_ratios")
 
     # -----------------------
     # DQ-04
     # -----------------------
-    check_balance_sheet_balance(
-        balancesheet
-    )
+    check_balance_sheet_balance(balancesheet)
 
     # -----------------------
     # DQ-05 to DQ-16
@@ -491,91 +469,45 @@ if __name__ == "__main__":
     check_opm_cross_check(profitandloss)
     check_positive_sales(profitandloss)
 
-    check_year_format(
-        profitandloss,
-        "profitandloss"
-    )
+    check_year_format(profitandloss, "profitandloss")
 
-    check_year_format(
-        balancesheet,
-        "balancesheet"
-    )
+    check_year_format(balancesheet, "balancesheet")
 
-    check_year_format(
-        cashflow,
-        "cashflow"
-    )
+    check_year_format(cashflow, "cashflow")
 
-    check_ticker_format(
-        profitandloss,
-        "profitandloss"
-    )
+    check_ticker_format(profitandloss, "profitandloss")
 
-    check_ticker_format(
-        balancesheet,
-        "balancesheet"
-    )
+    check_ticker_format(balancesheet, "balancesheet")
 
-    check_ticker_format(
-        cashflow,
-        "cashflow"
-    )
+    check_ticker_format(cashflow, "cashflow")
 
     check_net_cash(cashflow)
 
-    check_fixed_assets(
-        balancesheet
-    )
+    check_fixed_assets(balancesheet)
 
-    check_tax_range(
-        profitandloss
-    )
+    check_tax_range(profitandloss)
 
-    check_dividend_cap(
-        profitandloss
-    )
+    check_dividend_cap(profitandloss)
 
-    check_urls(
-        companies,
-        documents
-    )
+    check_urls(companies, documents)
 
-    check_eps_sign(
-        profitandloss
-    )
+    check_eps_sign(profitandloss)
 
-    check_bse_balance(
-        balancesheet
-    )
+    check_bse_balance(balancesheet)
 
-    check_coverage(
-        profitandloss
-    )
+    check_coverage(profitandloss)
 
     # -----------------------
     # Save Report
     # -----------------------
-    OUTPUT_PATH.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
-    report = pd.DataFrame(
-        validation_errors
-    )
+    report = pd.DataFrame(validation_errors)
 
-    report.to_csv(
-        OUTPUT_PATH /
-        "validation_failures.csv",
-        index=False
-    )
+    report.to_csv(OUTPUT_PATH / "validation_failures.csv", index=False)
 
     print("\nValidation completed.")
-    print(
-        f"Total Issues Found: {len(report)}"
-    )
+    print(f"Total Issues Found: {len(report)}")
 
     print("\nReport saved to:")
-    print(
-        "data/output/validation_failures.csv"
-    )   
+    print("data/output/validation_failures.csv")

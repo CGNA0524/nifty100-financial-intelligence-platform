@@ -1,7 +1,7 @@
 import sqlite3
-import yaml
-import pandas as pd
 
+import pandas as pd
+import yaml
 from export import create_screener_workbook
 
 DB_PATH = "db/nifty100.db"
@@ -11,7 +11,8 @@ def load_financial_ratios():
 
     conn = sqlite3.connect(DB_PATH)
 
-    df = pd.read_sql("""
+    df = pd.read_sql(
+        """
     SELECT
         fr.company_id,
         fr.year,
@@ -62,47 +63,50 @@ ON fr.company_id = s.company_id
         FROM financial_ratios f2
         WHERE f2.company_id = fr.company_id
     )
-    """, conn)
+    """,
+        conn,
+    )
 
     conn.close()
 
     return df
+
 
 def load_config():
     with open("config/screener_config.yaml", "r") as file:
         config = yaml.safe_load(file)
         return config
 
+
 def get_revenue_cagr_3yr():
 
     conn = sqlite3.connect(DB_PATH)
 
-    sales = pd.read_sql("""
+    sales = pd.read_sql(
+        """
         SELECT
             company_id,
             year,
             sales
         FROM profitandloss
-    """, conn)
+    """,
+        conn,
+    )
 
     conn.close()
 
     # Keep only rows having a 4-digit year
-    sales["year_num"] = sales["year"].str.extract(r'(\d{4})')[0]
+    sales["year_num"] = sales["year"].str.extract(r"(\d{4})")[0]
     sales = sales.dropna(subset=["year_num"])
     sales["year_num"] = sales["year_num"].astype(int)
 
-    sales = sales.sort_values(
-        ["company_id", "year_num"]
-    )
+    sales = sales.sort_values(["company_id", "year_num"])
 
     cagr = {}
 
     for company in sales["company_id"].unique():
 
-        company_df = sales[
-            sales["company_id"] == company
-        ]
+        company_df = sales[sales["company_id"] == company]
 
         if len(company_df) < 4:
             continue
@@ -118,28 +122,30 @@ def get_revenue_cagr_3yr():
         cagr[company] = value
 
     return cagr
-    
+
+
 def get_debt_declining_companies():
 
     conn = sqlite3.connect(DB_PATH)
 
-    df = pd.read_sql("""
+    df = pd.read_sql(
+        """
         SELECT
             company_id,
             year,
             debt_to_equity
         FROM financial_ratios
-    """, conn)
+    """,
+        conn,
+    )
 
     conn.close()
 
-    df["year_num"] = df["year"].str.extract(r'(\d{4})')[0]
+    df["year_num"] = df["year"].str.extract(r"(\d{4})")[0]
     df = df.dropna(subset=["year_num"])
     df["year_num"] = df["year_num"].astype(int)
 
-    df = df.sort_values(
-        ["company_id", "year_num"]
-    )
+    df = df.sort_values(["company_id", "year_num"])
 
     declining = []
 
@@ -150,15 +156,9 @@ def get_debt_declining_companies():
         if len(company_df) < 2:
             continue
 
-        latest = pd.to_numeric(
-            company_df.iloc[-1]["debt_to_equity"],
-            errors="coerce"
-        )
+        latest = pd.to_numeric(company_df.iloc[-1]["debt_to_equity"], errors="coerce")
 
-        previous = pd.to_numeric(
-            company_df.iloc[-2]["debt_to_equity"],
-            errors="coerce"
-        )
+        previous = pd.to_numeric(company_df.iloc[-2]["debt_to_equity"], errors="coerce")
 
         if pd.isna(latest) or pd.isna(previous):
             continue
@@ -168,12 +168,14 @@ def get_debt_declining_companies():
 
     return declining
 
+
 def winsorize(series):
 
     p10 = series.quantile(0.10)
     p90 = series.quantile(0.90)
 
     return series.clip(lower=p10, upper=p90)
+
 
 def normalize(series):
 
@@ -209,62 +211,47 @@ def calculate_composite_score(df):
     de = normalize(de)
     # Lower Debt/Equity is better
     de = 100 - de
-    icr = winsorize(
-        df["interest_coverage"]
-          .replace(float("inf"), 999)
-          .fillna(0)
-    )
+    icr = winsorize(df["interest_coverage"].replace(float("inf"), 999).fillna(0))
     icr = normalize(icr)
     # Temporary placeholders
     fcf_cagr = pd.Series(50, index=df.index)
     cfo_pat_ratio = pd.Series(50, index=df.index)
-    fcf_positive = (
-        (df["free_cash_flow_cr"] > 0)
-        .astype(int) * 100
+    fcf_positive = (df["free_cash_flow_cr"] > 0).astype(int) * 100
+    df["composite_quality_score"] = (
+        roe * 0.15
+        + roce * 0.10
+        + npm * 0.10
+        + fcf_cagr * 0.15
+        + cfo_pat_ratio * 0.10
+        + fcf_positive * 0.05
+        + revenue_cagr * 0.10
+        + pat_cagr * 0.10
+        + de * 0.10
+        + icr * 0.05
     )
-    df["composite_quality_score"] = (
-    roe * 0.15 +
-    roce * 0.10 +
-    npm * 0.10 +
-    fcf_cagr * 0.15 +
-    cfo_pat_ratio * 0.10 +
-    fcf_positive * 0.05 +
-    revenue_cagr * 0.10 +
-    pat_cagr * 0.10 +
-    de * 0.10 +
-    icr * 0.05
-)
-    df["composite_quality_score"] = (
-    df["composite_quality_score"]
-    .round(2)
- )
+    df["composite_quality_score"] = df["composite_quality_score"].round(2)
     return df
+
+
 def calculate_sector_relative_score(df):
 
     df = df.copy()
 
-    df["sector_relative_score"] = (
-        df.groupby("broad_sector")[
-            "composite_quality_score"
-        ].transform(normalize)
-    )
+    df["sector_relative_score"] = df.groupby("broad_sector")[
+        "composite_quality_score"
+    ].transform(normalize)
 
-    df["sector_relative_score"] = (
-        df["sector_relative_score"]
-        .round(2)
-    )
+    df["sector_relative_score"] = df["sector_relative_score"].round(2)
 
     return df
+
 
 def apply_screener(df, filters):
 
     result = df.copy()
 
     # Debt-free companies => Interest Coverage = Infinity
-    result.loc[
-        result["debt_to_equity"] == 0,
-        "interest_coverage"
-    ] = float("inf")
+    result.loc[result["debt_to_equity"] == 0, "interest_coverage"] = float("inf")
 
     for column, rule in filters.items():
 
@@ -280,10 +267,7 @@ def apply_screener(df, filters):
                     non_financial_df[column] <= rule["max"]
                 ]
 
-            result = pd.concat(
-                [financial_df, non_financial_df],
-                ignore_index=True
-            )
+            result = pd.concat([financial_df, non_financial_df], ignore_index=True)
 
             continue
 
@@ -293,17 +277,14 @@ def apply_screener(df, filters):
         if "max" in rule:
             result = result[result[column] <= rule["max"]]
 
-    result = result.sort_values(
-        by="composite_quality_score",
-        ascending=False
-    )
+    result = result.sort_values(by="composite_quality_score", ascending=False)
 
     return result
+
 
 def main():
 
     df = load_financial_ratios()
-    
 
     df = calculate_composite_score(df)
     df = calculate_sector_relative_score(df)
@@ -314,7 +295,7 @@ def main():
     debt_declining = get_debt_declining_companies()
 
     config = load_config()
-    
+
     export_columns = [
         "company_id",
         "year",
@@ -339,16 +320,14 @@ def main():
         "net_profit",
         "broad_sector",
         "composite_quality_score",
-        "sector_relative_score"
+        "sector_relative_score",
     ]
     all_results = {}
     for screener_name, filters in config.items():
 
         result = apply_screener(df, filters)
         if screener_name == "turnaround_watch":
-            result = result[
-                result["company_id"].isin(debt_declining)
-                ]
+            result = result[result["company_id"].isin(debt_declining)]
             result = result.reindex(columns=export_columns)
 
         print("=" * 50)
@@ -358,16 +337,17 @@ def main():
         if result.empty:
             print("⚠ No companies matched this screener.")
         else:
-            print(result[[
-                "company_id",
-                "return_on_equity_pct",
-                "debt_to_equity",
-                "composite_quality_score",
-                "sector_relative_score"
-            ]].head())
-
-
-
+            print(
+                result[
+                    [
+                        "company_id",
+                        "return_on_equity_pct",
+                        "debt_to_equity",
+                        "composite_quality_score",
+                        "sector_relative_score",
+                    ]
+                ].head()
+            )
 
         all_results[screener_name] = result
 

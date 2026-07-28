@@ -5,9 +5,9 @@ Valuation Module
 """
 
 import sqlite3
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
 
 # ==========================================
 # Database Path
@@ -24,20 +24,21 @@ OUTPUT_DIR = BASE_DIR / "output"
 # Database Connection
 # ==========================================
 
-def get_connection():
 
+def get_connection():
     """
     Returns SQLite database connection.
     """
 
     return sqlite3.connect(DB_PATH)
 
+
 # ==========================================
 # Load Market Cap Data
 # ==========================================
 
-def load_market_cap():
 
+def load_market_cap():
     """
     Loads market_cap table from SQLite database.
     """
@@ -60,12 +61,13 @@ def load_market_cap():
 
     return df
 
+
 # ==========================================
 # Load Financial Ratios
 # ==========================================
 
-def load_financial_ratios():
 
+def load_financial_ratios():
     """
     Loads financial_ratios table from SQLite database.
     """
@@ -88,12 +90,13 @@ def load_financial_ratios():
 
     return df
 
+
 # ==========================================
 # Load Sectors Data
 # ==========================================
 
-def load_sectors():
 
+def load_sectors():
     """
     Loads sectors table from SQLite database.
     """
@@ -115,12 +118,13 @@ def load_sectors():
 
     return df
 
+
 # ==========================================
 # Load Companies Data
 # ==========================================
 
-def load_companies():
 
+def load_companies():
     """
     Loads companies table from SQLite database.
     """
@@ -142,12 +146,13 @@ def load_companies():
 
     return df
 
+
 # ==========================================
 # Load Latest Market Cap Data
 # ==========================================
 
-def get_latest_market_cap():
 
+def get_latest_market_cap():
     """
     Returns only the latest available year
     for every company from market_cap table.
@@ -156,8 +161,7 @@ def get_latest_market_cap():
     market_cap = load_market_cap()
 
     latest_market_cap = (
-        market_cap
-        .sort_values("year")
+        market_cap.sort_values("year")
         .groupby("company_id")
         .tail(1)
         .reset_index(drop=True)
@@ -165,12 +169,13 @@ def get_latest_market_cap():
 
     return latest_market_cap
 
+
 # ==========================================
 # Load Latest Financial Ratios
 # ==========================================
 
-def get_latest_financial_ratios():
 
+def get_latest_financial_ratios():
     """
     Returns only the latest available year
     for every company from financial_ratios table.
@@ -179,8 +184,7 @@ def get_latest_financial_ratios():
     financial_ratios = load_financial_ratios()
 
     latest_ratios = (
-        financial_ratios
-        .sort_values("year")
+        financial_ratios.sort_values("year")
         .groupby("company_id")
         .tail(1)
         .reset_index(drop=True)
@@ -188,12 +192,13 @@ def get_latest_financial_ratios():
 
     return latest_ratios
 
+
 # ==========================================
 # Calculate FCF Yield
 # ==========================================
 
-def calculate_fcf_yield():
 
+def calculate_fcf_yield():
     """
     Calculates Free Cash Flow Yield.
 
@@ -206,27 +211,21 @@ def calculate_fcf_yield():
 
     financial_ratios = get_latest_financial_ratios()
 
-    merged_df = pd.merge(
-        financial_ratios,
-        market_cap,
-        on="company_id",
-        how="inner"
-    )
+    merged_df = pd.merge(financial_ratios, market_cap, on="company_id", how="inner")
 
     merged_df["fcf_yield_pct"] = (
-        merged_df["free_cash_flow_cr"]
-        /
-        merged_df["market_cap_crore"]
+        merged_df["free_cash_flow_cr"] / merged_df["market_cap_crore"]
     ) * 100
 
     return merged_df
+
 
 # ==========================================
 # Calculate Sector Median PE Ratio
 # ==========================================
 
-def calculate_sector_median_pe():
 
+def calculate_sector_median_pe():
     """
     Calculates sector wise median PE ratio.
     """
@@ -235,40 +234,23 @@ def calculate_sector_median_pe():
 
     sectors = load_sectors()
 
-    merged_df = pd.merge(
-        market_cap,
-        sectors,
-        on="company_id",
-        how="left"
-    )
+    merged_df = pd.merge(market_cap, sectors, on="company_id", how="left")
 
     sector_median_pe = (
-
-        merged_df
-        .groupby("broad_sector")["pe_ratio"]
-        .median()
-        .reset_index()
-
+        merged_df.groupby("broad_sector")["pe_ratio"].median().reset_index()
     )
 
-    sector_median_pe.rename(
-
-        columns={
-            "pe_ratio": "sector_median_pe"
-        },
-
-        inplace=True
-
-    )
+    sector_median_pe.rename(columns={"pe_ratio": "sector_median_pe"}, inplace=True)
 
     return sector_median_pe
+
 
 # ==========================================
 # Apply Valuation Flags
 # ==========================================
 
-def apply_valuation_flags():
 
+def apply_valuation_flags():
     """
     Applies Discount, Fair and
     Caution valuation flags.
@@ -281,21 +263,10 @@ def apply_valuation_flags():
     sectors = load_sectors()
 
     # Add sector information
-    valuation_df = pd.merge(
-        valuation_df,
-        sectors,
-        on="company_id",
-        how="left"
-    )
+    valuation_df = pd.merge(valuation_df, sectors, on="company_id", how="left")
 
     # Add sector median PE
-    valuation_df = pd.merge(
-        valuation_df,
-        sector_pe,
-        on="broad_sector",
-        how="left"
-    )
-
+    valuation_df = pd.merge(valuation_df, sector_pe, on="broad_sector", how="left")
 
     def get_flag(row):
 
@@ -314,21 +285,17 @@ def apply_valuation_flags():
 
         return "Fair"
 
-
-    valuation_df["flag"] = (
-        valuation_df
-        .apply(get_flag, axis=1)
-    )
-
+    valuation_df["flag"] = valuation_df.apply(get_flag, axis=1)
 
     return valuation_df
+
 
 # ==========================================
 # Prepare Final Valuation Data
 # ==========================================
 
-def prepare_valuation_summary():
 
+def prepare_valuation_summary():
     """
     Prepares the final valuation dataframe
     required for Sprint-4 deliverables.
@@ -337,25 +304,15 @@ def prepare_valuation_summary():
     valuation_df = apply_valuation_flags()
 
     # Get company names only
-    company_names = (
-        load_companies()
-        .set_index("id")["company_name"]
-    )
+    company_names = load_companies().set_index("id")["company_name"]
 
     # Map company names
-    valuation_df["company_name"] = (
-        valuation_df["company_id"]
-        .map(company_names)
-    )
+    valuation_df["company_name"] = valuation_df["company_id"].map(company_names)
 
     # PE vs Sector Median %
     valuation_df["pe_vs_sector_median_pct"] = (
-        (
-            valuation_df["pe_ratio"]
-            /
-            valuation_df["sector_median_pe"]
-        ) * 100
-    )
+        valuation_df["pe_ratio"] / valuation_df["sector_median_pe"]
+    ) * 100
 
     # Handle missing and infinite values
     valuation_df["pe_vs_sector_median_pct"] = (
@@ -365,30 +322,15 @@ def prepare_valuation_summary():
     )
 
     # Round important valuation columns
-    valuation_df["fcf_yield_pct"] = (
-        valuation_df["fcf_yield_pct"]
-        .round(2)
-    )
+    valuation_df["fcf_yield_pct"] = valuation_df["fcf_yield_pct"].round(2)
 
-    valuation_df["sector_median_pe"] = (
-        valuation_df["sector_median_pe"]
-        .round(2)
-    )
+    valuation_df["sector_median_pe"] = valuation_df["sector_median_pe"].round(2)
 
-    valuation_df["pe_ratio"] = (
-        valuation_df["pe_ratio"]
-        .round(2)
-    )
+    valuation_df["pe_ratio"] = valuation_df["pe_ratio"].round(2)
 
-    valuation_df["pb_ratio"] = (
-        valuation_df["pb_ratio"]
-        .round(2)
-    )
+    valuation_df["pb_ratio"] = valuation_df["pb_ratio"].round(2)
 
-    valuation_df["ev_ebitda"] = (
-        valuation_df["ev_ebitda"]
-        .round(2)
-    )
+    valuation_df["ev_ebitda"] = valuation_df["ev_ebitda"].round(2)
 
     # Select Sprint-4 required columns
     valuation_df = valuation_df[
@@ -402,18 +344,19 @@ def prepare_valuation_summary():
             "fcf_yield_pct",
             "sector_median_pe",
             "pe_vs_sector_median_pct",
-            "flag"
+            "flag",
         ]
     ]
 
     return valuation_df
 
+
 # ==========================================
 # Generate valuation_summary.xlsx
 # ==========================================
 
-def save_valuation_summary():
 
+def save_valuation_summary():
     """
     Saves valuation summary Excel file.
     """
@@ -421,25 +364,13 @@ def save_valuation_summary():
     valuation_df = prepare_valuation_summary()
 
     # Create output folder if required
-    OUTPUT_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    output_path = (
-        OUTPUT_DIR
-        /
-        "valuation_summary.xlsx"
-    )
+    output_path = OUTPUT_DIR / "valuation_summary.xlsx"
 
-    valuation_df.to_excel(
-        output_path,
-        index=False
-    )
+    valuation_df.to_excel(output_path, index=False)
 
-    print(
-        "\nvaluation_summary.xlsx generated successfully."
-    )
+    print("\nvaluation_summary.xlsx generated successfully.")
 
     return valuation_df
 
@@ -448,8 +379,8 @@ def save_valuation_summary():
 # Generate valuation_flags.csv
 # ==========================================
 
-def save_valuation_flags():
 
+def save_valuation_flags():
     """
     Saves only Discount and Caution
     companies in CSV format.
@@ -457,37 +388,16 @@ def save_valuation_flags():
 
     valuation_df = prepare_valuation_summary()
 
-    flags_df = valuation_df[
-
-        valuation_df["flag"].isin(
-            [
-                "Discount",
-                "Caution"
-            ]
-        )
-
-    ]
+    flags_df = valuation_df[valuation_df["flag"].isin(["Discount", "Caution"])]
 
     # Create output folder if required
-    OUTPUT_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    output_path = (
-        OUTPUT_DIR
-        /
-        "valuation_flags.csv"
-    )
+    output_path = OUTPUT_DIR / "valuation_flags.csv"
 
-    flags_df.to_csv(
-        output_path,
-        index=False
-    )
+    flags_df.to_csv(output_path, index=False)
 
-    print(
-        "\nvaluation_flags.csv generated successfully."
-    )
+    print("\nvaluation_flags.csv generated successfully.")
 
     return flags_df
 
@@ -496,8 +406,8 @@ def save_valuation_flags():
 # Main Function
 # ==========================================
 
-def main():
 
+def main():
     """
     Generates all Sprint-4
     valuation deliverables.
@@ -509,9 +419,7 @@ def main():
 
     save_valuation_flags()
 
-    print(
-        "\nSprint-4 Valuation Module Completed Successfully."
-    )
+    print("\nSprint-4 Valuation Module Completed Successfully.")
 
 
 if __name__ == "__main__":

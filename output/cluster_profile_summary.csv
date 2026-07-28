@@ -1,0 +1,6 @@
+cluster_id,cluster_name,companies,avg_roe,avg_debt,avg_revenue_cagr,avg_fcf,avg_opm
+0,Value Cyclicals,8,15.09,8.8,19.89,2061.0,56.9
+1,High Quality Compounders,2,4280.32,0.56,9.73,274.5,28.51
+2,Emerging Growth,59,22.72,0.6,11.26,5467.97,19.58
+3,Turnaround Candidates,6,20.64,5.73,18.37,-65040.83,43.47
+4,Defensive Leaders,15,74.04,0.66,13.77,7610.2,81.03

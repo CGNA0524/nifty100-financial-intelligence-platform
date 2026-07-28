@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 import streamlit as st
 
 # ======================================================
@@ -21,7 +22,7 @@ st.set_page_config(
     page_title="Nifty 100 Analytics",
     page_icon="📈",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # ======================================================
@@ -32,17 +33,13 @@ st.title("📈 Nifty 100 Financial Intelligence Platform")
 
 st.markdown("---")
 
-st.success(
-    "Sprint 4 Dashboard Started Successfully!"
-)
+st.success("Sprint 4 Dashboard Started Successfully!")
 
-st.write(
-    """
+st.write("""
 Welcome to the **Nifty 100 Financial Intelligence Platform**.
 
 Use the navigation menu from the sidebar to explore all dashboard screens.
-"""
-)
+""")
 
 # ======================================================
 # Sidebar
@@ -88,9 +85,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.info(
-        "Select any page from the left sidebar."
-    )
+    st.info("Select any page from the left sidebar.")
 
 # ======================================================
 # Main Page
@@ -117,23 +112,12 @@ This dashboard provides:
 
 with col2:
 
-    st.metric(
-        "Project",
-        "Nifty100"
-    )
+    st.metric("Project", "Nifty100")
 
-    st.metric(
-        "Sprint",
-        "Sprint 4"
-    )
+    st.metric("Sprint", "Sprint 4")
 
-    st.metric(
-        "Status",
-        "In Progress"
-    )
+    st.metric("Status", "In Progress")
 
 st.markdown("---")
 
-st.info(
-    "Navigate using the sidebar to access the dashboard pages."
-)
+st.info("Navigate using the sidebar to access the dashboard pages.")

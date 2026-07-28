@@ -1,5 +1,6 @@
-from pathlib import Path
 import sqlite3
+from pathlib import Path
+
 import pandas as pd
 
 # ======================================================
@@ -47,12 +48,7 @@ def main():
     ratios = load_financial_ratios()
 
     # Keep latest record for each company
-    ratios = (
-        ratios
-        .sort_values("year")
-        .groupby("company_id", as_index=False)
-        .last()
-    )
+    ratios = ratios.sort_values("year").groupby("company_id", as_index=False).last()
 
     generated_rows = []
 
@@ -93,22 +89,27 @@ def main():
         if pd.notna(row["interest_coverage"]) and row["interest_coverage"] < 2:
             cons.append("Weak Interest Coverage")
 
-        if pd.notna(row["dividend_payout_ratio_pct"]) and row["dividend_payout_ratio_pct"] < 15:
+        if (
+            pd.notna(row["dividend_payout_ratio_pct"])
+            and row["dividend_payout_ratio_pct"] < 15
+        ):
             cons.append("Low Dividend Payout")
 
-        generated_rows.append({
-            "company_id": row["company_id"],
-            "pros": "; ".join(pros) if pros else "No significant strengths identified",
-            "cons": "; ".join(cons) if cons else "No significant concerns identified"
+        generated_rows.append(
+            {
+                "company_id": row["company_id"],
+                "pros": (
+                    "; ".join(pros) if pros else "No significant strengths identified"
+                ),
+                "cons": (
+                    "; ".join(cons) if cons else "No significant concerns identified"
+                ),
             }
         )
 
     output_df = pd.DataFrame(generated_rows)
 
-    output_df.to_csv(
-        OUTPUT_FILE,
-        index=False
-    )
+    output_df.to_csv(OUTPUT_FILE, index=False)
 
     print("\nGenerated Companies :", len(output_df))
 
@@ -124,10 +125,7 @@ def main():
 
     conn = sqlite3.connect(DB_PATH)
 
-    companies = pd.read_sql(
-    "SELECT id FROM companies",
-    conn
-)
+    companies = pd.read_sql("SELECT id FROM companies", conn)
 
     conn.close()
 
@@ -144,7 +142,6 @@ def main():
     if missing:
         print("\nMissing List:")
         print(missing)
-
 
     # ==========================================
     # Check Missing Company Data
@@ -165,6 +162,7 @@ def main():
         else:
             print(temp)
             print()
+
 
 if __name__ == "__main__":
     main()

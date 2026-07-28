@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 # =====================================================
@@ -18,6 +19,7 @@ DISTRIBUTION_FILE = OUTPUT_DIR / "capital_allocation_distribution.xlsx"
 # Load Data
 # =====================================================
 
+
 def load_data():
 
     return pd.read_csv(INPUT_FILE)
@@ -26,6 +28,7 @@ def load_data():
 # =====================================================
 # Main
 # =====================================================
+
 
 def main():
 
@@ -39,12 +42,7 @@ def main():
     print("\nRows Loaded :", len(df))
 
     # Extract numeric year (e.g. "Mar 2024" -> 2024)
-    df["year_num"] = (
-        df["year"]
-        .astype(str)
-        .str.extract(r"(\d{4})")
-        .astype(int)
-    )
+    df["year_num"] = df["year"].astype(str).str.extract(r"(\d{4})").astype(int)
 
     latest_year = df["year_num"].max()
 
@@ -56,20 +54,12 @@ def main():
 
     distribution = (
         latest_df.groupby("capital_allocation_pattern")
-        .agg(
-            companies=("company_id", "nunique")
-        )
+        .agg(companies=("company_id", "nunique"))
         .reset_index()
-        .sort_values(
-            by="companies",
-            ascending=False
-        )
+        .sort_values(by="companies", ascending=False)
     )
 
-    distribution.to_excel(
-        DISTRIBUTION_FILE,
-        index=False
-    )
+    distribution.to_excel(DISTRIBUTION_FILE, index=False)
 
     print("\nDistribution Summary\n")
     print(distribution)

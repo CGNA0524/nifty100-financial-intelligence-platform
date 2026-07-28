@@ -20,7 +20,6 @@ PARSED_OUTPUT = OUTPUT_DIR / "analysis_parsed.csv"
 FAILURE_OUTPUT = OUTPUT_DIR / "parse_failures.csv"
 
 
-
 def load_ratio_engine_data():
     """
     Load CAGR values from the financial_ratios table.
@@ -52,8 +51,8 @@ def map_metric_to_ratio_column(metric_type):
     mapping = {
         "compounded_sales_growth": "revenue_cagr_5yr",
         "compounded_profit_growth": "pat_cagr_5yr",
-        "stock_price_cagr": None,          # No matching DB column
-        "roe": None                        # Parsed ROE is different from CAGR
+        "stock_price_cagr": None,  # No matching DB column
+        "roe": None,  # Parsed ROE is different from CAGR
     }
 
     return mapping.get(metric_type)
@@ -62,6 +61,7 @@ def map_metric_to_ratio_column(metric_type):
 # ======================================================
 # Main
 # ======================================================
+
 
 def main():
 
@@ -72,10 +72,7 @@ def main():
 
     print(f"Reading : {ANALYSIS_FILE}")
 
-    df = pd.read_excel(
-        ANALYSIS_FILE,
-        header=1
-    )
+    df = pd.read_excel(ANALYSIS_FILE, header=1)
 
     print("\nColumns:\n")
     print(df.columns.tolist())
@@ -90,9 +87,7 @@ def main():
     # Regex Pattern
     # ======================================================
 
-    pattern = re.compile(
-        r"(\d+)\s*Years?:?\s*(-?[\d.]+)%"
-    )
+    pattern = re.compile(r"(\d+)\s*Years?:?\s*(-?[\d.]+)%")
 
     parsed_rows = []
     failed_rows = []
@@ -101,7 +96,7 @@ def main():
         "compounded_sales_growth",
         "compounded_profit_growth",
         "stock_price_cagr",
-        "roe"
+        "roe",
     ]
 
     # ======================================================
@@ -120,24 +115,20 @@ def main():
 
             if match:
 
-                parsed_rows.append({
-
-                    "company_id": company_id,
-                    "metric_type": metric,
-                    "period_years": int(match.group(1)),
-                    "value_pct": float(match.group(2))
-
-                })
+                parsed_rows.append(
+                    {
+                        "company_id": company_id,
+                        "metric_type": metric,
+                        "period_years": int(match.group(1)),
+                        "value_pct": float(match.group(2)),
+                    }
+                )
 
             else:
 
-                failed_rows.append({
-
-                    "company_id": company_id,
-                    "metric_type": metric,
-                    "raw_text": text
-
-                })
+                failed_rows.append(
+                    {"company_id": company_id, "metric_type": metric, "raw_text": text}
+                )
 
     # ======================================================
     # Save Outputs
@@ -146,15 +137,9 @@ def main():
     parsed_df = pd.DataFrame(parsed_rows)
     failed_df = pd.DataFrame(failed_rows)
 
-    parsed_df.to_csv(
-        PARSED_OUTPUT,
-        index=False
-    )
+    parsed_df.to_csv(PARSED_OUTPUT, index=False)
 
-    failed_df.to_csv(
-        FAILURE_OUTPUT,
-        index=False
-    )
+    failed_df.to_csv(FAILURE_OUTPUT, index=False)
 
     print("\nParsed Records :", len(parsed_df))
     print("Failed Records :", len(failed_df))
@@ -179,12 +164,7 @@ def main():
     # ==========================================
 
     ratio_df = ratio_df.dropna(
-        subset=[
-            "revenue_cagr_5yr",
-            "pat_cagr_5yr",
-            "eps_cagr_5yr"
-        ],
-        how="all"
+        subset=["revenue_cagr_5yr", "pat_cagr_5yr", "eps_cagr_5yr"], how="all"
     )
 
     print("\nRatio Engine After Cleaning:")
@@ -203,9 +183,7 @@ def main():
     )
 
     # Only keep metrics that have a matching Ratio Engine column
-    validation_df = validation_df[
-        validation_df["ratio_column"].notna()
-    ]
+    validation_df = validation_df[validation_df["ratio_column"].notna()]
 
     print("\nValidation Preview:\n")
     print(validation_df.head())
@@ -225,9 +203,7 @@ def main():
         parsed_value = row["value_pct"]
         ratio_column = row["ratio_column"]
 
-        company_data = ratio_df[
-            ratio_df["company_id"] == company
-        ]
+        company_data = ratio_df[ratio_df["company_id"] == company]
 
         if company_data.empty:
             continue
@@ -241,23 +217,22 @@ def main():
 
         difference = abs(parsed_value - calculated_value)
 
-        comparison_rows.append({
-            "company_id": company,
-            "metric_type": metric,
-            "parsed_value": parsed_value,
-            "calculated_value": calculated_value,
-            "difference_pct": round(difference, 2),
-            "status": "REVIEW" if difference > 5 else "PASS"
-        })
+        comparison_rows.append(
+            {
+                "company_id": company,
+                "metric_type": metric,
+                "parsed_value": parsed_value,
+                "calculated_value": calculated_value,
+                "difference_pct": round(difference, 2),
+                "status": "REVIEW" if difference > 5 else "PASS",
+            }
+        )
 
     comparison_df = pd.DataFrame(comparison_rows)
 
     comparison_output = OUTPUT_DIR / "cagr_validation.csv"
 
-    comparison_df.to_csv(
-        comparison_output,
-        index=False
-    )
+    comparison_df.to_csv(comparison_output, index=False)
 
     print("\nValidation Completed")
 
@@ -271,6 +246,7 @@ def main():
 
     print("\nSummary:")
     print(comparison_df["status"].value_counts())
+
 
 # ======================================================
 # Run

@@ -1,21 +1,22 @@
-import sqlite3
 import os
+import sqlite3
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 DB_PATH = "db/nifty100.db"
 OUTPUT_FOLDER = "reports/radar_charts"
 
-os.makedirs(
-    OUTPUT_FOLDER,
-    exist_ok=True
-)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+
 def load_radar_data():
 
     conn = sqlite3.connect(DB_PATH)
 
-    df = pd.read_sql("""
+    df = pd.read_sql(
+        """
 
     SELECT
 
@@ -50,13 +51,16 @@ def load_radar_data():
 
     )
 
-    """, conn)
+    """,
+        conn,
+    )
 
     conn.close()
 
     return df
-METRICS = [
 
+
+METRICS = [
     "return_on_equity_pct",
     "roce_percentage",
     "net_profit_margin_pct",
@@ -64,55 +68,38 @@ METRICS = [
     "free_cash_flow_cr",
     "pat_cagr_5yr",
     "revenue_cagr_5yr",
-    "composite_quality_score"
-
+    "composite_quality_score",
 ]
+
+
 def create_standalone_chart(company_row, nifty_average):
 
     labels = ["Composite"]
 
     company_value = [
-        company_row["composite_quality_score"]
-        if pd.notna(company_row["composite_quality_score"])
-        else 0
+        (
+            company_row["composite_quality_score"]
+            if pd.notna(company_row["composite_quality_score"])
+            else 0
+        )
     ]
 
-    nifty_value = [
-        nifty_average
-    ]
+    nifty_value = [nifty_average]
 
     angles = [0, 2 * np.pi]
 
     company_plot = company_value * 2
     nifty_plot = nifty_value * 2
 
-    fig = plt.figure(figsize=(5,5))
+    fig = plt.figure(figsize=(5, 5))
 
-    ax = plt.subplot(
-        111,
-        polar=True
-    )
+    ax = plt.subplot(111, polar=True)
 
-    ax.plot(
-        angles,
-        company_plot,
-        linewidth=2,
-        label=company_row["company_id"]
-    )
+    ax.plot(angles, company_plot, linewidth=2, label=company_row["company_id"])
 
-    ax.fill(
-        angles,
-        company_plot,
-        alpha=0.25
-    )
+    ax.fill(angles, company_plot, alpha=0.25)
 
-    ax.plot(
-        angles,
-        nifty_plot,
-        linewidth=2,
-        linestyle="--",
-        label="Nifty100 Avg"
-    )
+    ax.plot(angles, nifty_plot, linewidth=2, linestyle="--", label="Nifty100 Avg")
 
     ax.set_xticks([0])
     ax.set_xticklabels(["Composite"])
@@ -120,16 +107,13 @@ def create_standalone_chart(company_row, nifty_average):
     plt.legend()
 
     filename = os.path.join(
-        OUTPUT_FOLDER,
-        f"{company_row['company_id']}_standalone.png"
+        OUTPUT_FOLDER, f"{company_row['company_id']}_standalone.png"
     )
 
-    plt.savefig(
-        filename,
-        dpi=200
-    )
+    plt.savefig(filename, dpi=200)
 
     plt.close()
+
 
 def create_radar_chart(company_row, peer_average):
 
@@ -141,7 +125,7 @@ def create_radar_chart(company_row, peer_average):
         "FCF",
         "PAT CAGR",
         "Revenue CAGR",
-        "Composite"
+        "Composite",
     ]
 
     company_values = []
@@ -159,22 +143,11 @@ def create_radar_chart(company_row, peer_average):
         )
 
     # Lower D/E is better
-    company_values[3] = max(
-        0,
-        100 - company_values[3]
-    )
+    company_values[3] = max(0, 100 - company_values[3])
 
-    average_values[3] = max(
-        0,
-        100 - average_values[3]
-    )
+    average_values[3] = max(0, 100 - average_values[3])
 
-    angles = np.linspace(
-        0,
-        2 * np.pi,
-        len(labels),
-        endpoint=False
-    ).tolist()
+    angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
 
     company_values += company_values[:1]
     average_values += average_values[:1]
@@ -182,91 +155,50 @@ def create_radar_chart(company_row, peer_average):
 
     fig = plt.figure(figsize=(6, 6))
 
-    ax = plt.subplot(
-        111,
-        polar=True
-    )
+    ax = plt.subplot(111, polar=True)
 
-    ax.plot(
-        angles,
-        company_values,
-        linewidth=2,
-        label=company_row["company_id"]
-    )
+    ax.plot(angles, company_values, linewidth=2, label=company_row["company_id"])
 
-    ax.fill(
-        angles,
-        company_values,
-        alpha=0.25
-    )
+    ax.fill(angles, company_values, alpha=0.25)
 
-    ax.plot(
-        angles,
-        average_values,
-        linewidth=2,
-        linestyle="--",
-        label="Peer Average"
-    )
+    ax.plot(angles, average_values, linewidth=2, linestyle="--", label="Peer Average")
 
-    ax.set_xticks(
-        angles[:-1]
-    )
+    ax.set_xticks(angles[:-1])
 
-    ax.set_xticklabels(
-        labels
-    )
+    ax.set_xticklabels(labels)
 
-    ax.set_title(
-        company_row["company_id"]
-    )
+    ax.set_title(company_row["company_id"])
 
-    ax.legend(
-        loc="upper right"
-    )
+    ax.legend(loc="upper right")
 
     plt.tight_layout()
 
-    filename = os.path.join(
-        OUTPUT_FOLDER,
-        f"{company_row['company_id']}_radar.png"
-    )
+    filename = os.path.join(OUTPUT_FOLDER, f"{company_row['company_id']}_radar.png")
 
-    plt.savefig(
-        filename,
-        dpi=200
-    )
+    plt.savefig(filename, dpi=200)
 
     plt.close()
+
+
 def generate_all_radar_charts(df):
 
     print("\nGenerating Radar Charts...\n")
 
-    os.makedirs(
-        OUTPUT_FOLDER,
-        exist_ok=True
-    )
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
     nifty_average = df["composite_quality_score"].mean()
 
     # Peer group companies
     for group in df["peer_group_name"].dropna().unique():
 
-        group_df = df[
-            df["peer_group_name"] == group
-        ]
+        group_df = df[df["peer_group_name"] == group]
 
-        peer_average = group_df[
-            METRICS
-        ].mean(
-            numeric_only=True
-        )
+        peer_average = group_df[METRICS].mean(numeric_only=True)
 
         for _, row in group_df.iterrows():
 
-            create_radar_chart(
-                row,
-                peer_average
-            )
+            create_radar_chart(row, peer_average)
+
 
 def main():
 

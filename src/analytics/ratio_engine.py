@@ -7,6 +7,11 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from src.analytics.cagr import (
+    eps_cagr_5yr,
+    pat_cagr_5yr,
+    revenue_cagr_5yr,
+)
 from src.analytics.ratios import (
     asset_turnover,
     capex_intensity,
@@ -19,12 +24,6 @@ from src.analytics.ratios import (
     operating_profit_margin,
     return_on_equity,
 )
-from src.analytics.cagr import (
-    eps_cagr_5yr,
-    pat_cagr_5yr,
-    revenue_cagr_5yr,
-)
-
 
 logger = logging.getLogger(__name__)
 
@@ -87,9 +86,7 @@ class RatioEngine:
 
         base_path = Path(__file__).resolve().parents[2]
         resolved_db_path = (
-            Path(db_path)
-            if db_path is not None
-            else base_path / "db" / "nifty100.db"
+            Path(db_path) if db_path is not None else base_path / "db" / "nifty100.db"
         )
 
         self.db_path = str(resolved_db_path)
@@ -135,7 +132,9 @@ class RatioEngine:
         print(f"Cash Flow Rows     : {len(self.cashflow)}")
         print(f"Rows Loaded : {len(self.pnl) + len(self.balance) + len(self.cashflow)}")
 
-    def build_lookup(self, rows: list[sqlite3.Row]) -> dict[tuple[Any, Any], sqlite3.Row]:
+    def build_lookup(
+        self, rows: list[sqlite3.Row]
+    ) -> dict[tuple[Any, Any], sqlite3.Row]:
         """Create a lookup keyed by company_id and year."""
 
         lookup: dict[tuple[Any, Any], sqlite3.Row] = {}
@@ -424,9 +423,7 @@ class RatioEngine:
         if not schema_rows:
             return False
 
-        schema_types = {
-            row["name"]: (row["type"] or "").upper() for row in schema_rows
-        }
+        schema_types = {row["name"]: (row["type"] or "").upper() for row in schema_rows}
         primary_key_columns = [row["name"] for row in schema_rows if row["pk"]]
 
         if "id" not in primary_key_columns:
@@ -618,7 +615,9 @@ class RatioEngine:
             return None
 
         year_text = str(year_value)
-        digits_only = "".join(character for character in year_text if character.isdigit())
+        digits_only = "".join(
+            character for character in year_text if character.isdigit()
+        )
 
         if len(digits_only) >= 4:
             return int(digits_only[:4])
@@ -744,8 +743,7 @@ class RatioEngine:
             for item in recent_records
         ) / len(recent_records)
         avg_pat = sum(
-            self._safe_number(item["pnl"]["net_profit"])
-            for item in recent_records
+            self._safe_number(item["pnl"]["net_profit"]) for item in recent_records
         ) / len(recent_records)
 
         score = cfo_quality_score(avg_cfo, avg_pat)

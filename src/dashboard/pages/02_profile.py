@@ -1,8 +1,9 @@
-import streamlit as st
-import plotly.express as px
-import pandas as pd
 import sys
 from pathlib import Path
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
 
 # ----------------------------------
 # Project Path
@@ -15,22 +16,13 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from dashboard.utils.db import (
-    get_companies,
-    get_pl,
-    get_cf,
-    get_ratios
-)
+from dashboard.utils.db import get_cf, get_companies, get_pl, get_ratios
 
 # ----------------------------------
 # Page Config
 # ----------------------------------
 
-st.set_page_config(
-    page_title="Company Profile",
-    page_icon="🏢",
-    layout="wide"
-)
+st.set_page_config(page_title="Company Profile", page_icon="🏢", layout="wide")
 
 st.title("🏢 Company Profile")
 
@@ -44,14 +36,9 @@ companies = get_companies()
 
 company_names = companies["company_name"].tolist()
 
-selected_company = st.selectbox(
-    "Search Company",
-    company_names
-)
+selected_company = st.selectbox("Search Company", company_names)
 
-company = companies[
-    companies["company_name"] == selected_company
-].iloc[0]
+company = companies[companies["company_name"] == selected_company].iloc[0]
 
 company_id = company["id"]
 # ----------------------------------
@@ -64,34 +51,23 @@ left, right = st.columns([1, 3])
 
 with left:
 
-    st.image(
-        "src/dashboard/assets/default_company_logo.png",
-        width=200
-    )
+    st.image("src/dashboard/assets/default_company_logo.png", width=200)
 
 with right:
 
-    st.markdown(
-        f"## {company['company_name']}"
-    )
+    st.markdown(f"## {company['company_name']}")
 
-    st.write(
-        f"**Ticker :** {company_id}"
-    )
+    st.write(f"**Ticker :** {company_id}")
 
     if pd.notna(company["website"]):
 
-        st.markdown(
-            f"**Website :** {company['website']}"
-        )
+        st.markdown(f"**Website :** {company['website']}")
 
     st.write("")
 
     if pd.notna(company["about_company"]):
 
-        st.write(
-            company["about_company"]
-        )
+        st.write(company["about_company"])
 
 st.divider()
 
@@ -107,24 +83,22 @@ with c1:
 
     st.metric(
         "ROE %",
-        round(
-            company["roe_percentage"],
-            2
-        )
-        if pd.notna(company["roe_percentage"])
-        else "N/A"
+        (
+            round(company["roe_percentage"], 2)
+            if pd.notna(company["roe_percentage"])
+            else "N/A"
+        ),
     )
 
 with c2:
 
     st.metric(
         "ROCE %",
-        round(
-            company["roce_percentage"],
-            2
-        )
-        if pd.notna(company["roce_percentage"])
-        else "N/A"
+        (
+            round(company["roce_percentage"], 2)
+            if pd.notna(company["roce_percentage"])
+            else "N/A"
+        ),
     )
 
 st.divider()
@@ -141,10 +115,7 @@ if not pl.empty:
 
     pl = pl.copy()
 
-    pl["year"] = (
-        pl["year"]
-        .str.replace("Mar ", "", regex=False)
-    )
+    pl["year"] = pl["year"].str.replace("Mar ", "", regex=False)
 
     latest = pl.iloc[-1]
 
@@ -162,22 +133,13 @@ if latest is not None:
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        st.metric(
-            "Revenue (₹ Cr)",
-            f"{latest['sales']:,.0f}"
-        )
+        st.metric("Revenue (₹ Cr)", f"{latest['sales']:,.0f}")
 
     with c2:
-        st.metric(
-            "Net Profit (₹ Cr)",
-            f"{latest['net_profit']:,.0f}"
-        )
+        st.metric("Net Profit (₹ Cr)", f"{latest['net_profit']:,.0f}")
 
     with c3:
-        st.metric(
-            "EPS",
-            round(latest["eps"], 2)
-        )
+        st.metric("EPS", round(latest["eps"], 2))
 
     c4, c5, c6 = st.columns(3)
 
@@ -190,31 +152,19 @@ if latest is not None:
 
         if latest_cf is not None:
 
-            st.metric(
-                "Operating Cash Flow",
-                f"{latest_cf['operating_activity']:,.0f}"
-            )
+            st.metric("Operating Cash Flow", f"{latest_cf['operating_activity']:,.0f}")
 
         else:
 
-            st.metric(
-                "Operating Cash Flow",
-                "N/A"
-            )
+            st.metric("Operating Cash Flow", "N/A")
 
     with c5:
 
-        st.metric(
-            "ROE %",
-            round(company["roe_percentage"], 2)
-        )
+        st.metric("ROE %", round(company["roe_percentage"], 2))
 
     with c6:
 
-        st.metric(
-            "ROCE %",
-            round(company["roce_percentage"], 2)
-        )
+        st.metric("ROCE %", round(company["roce_percentage"], 2))
 
 st.divider()
 
@@ -224,33 +174,11 @@ st.divider()
 
 st.subheader("Revenue Trend")
 
-fig = px.bar(
+fig = px.bar(pl, x="year", y="sales", text="sales", title="Revenue (₹ Crore)")
 
-    pl,
+fig.update_traces(textposition="outside")
 
-    x="year",
-
-    y="sales",
-
-    text="sales",
-
-    title="Revenue (₹ Crore)"
-
-)
-
-fig.update_traces(
-
-    textposition="outside"
-
-)
-
-st.plotly_chart(
-
-    fig,
-
-    width="stretch"
-
-)
+st.plotly_chart(fig, width="stretch")
 
 # ----------------------------------
 # Net Profit Trend
@@ -259,32 +187,12 @@ st.plotly_chart(
 st.subheader("Net Profit Trend")
 
 fig = px.bar(
-
-    pl,
-
-    x="year",
-
-    y="net_profit",
-
-    text="net_profit",
-
-    title="Net Profit (₹ Crore)"
-
+    pl, x="year", y="net_profit", text="net_profit", title="Net Profit (₹ Crore)"
 )
 
-fig.update_traces(
+fig.update_traces(textposition="outside")
 
-    textposition="outside"
-
-)
-
-st.plotly_chart(
-
-    fig,
-
-    width="stretch"
-
-)
+st.plotly_chart(fig, width="stretch")
 
 # ----------------------------------
 # ROE Trend
@@ -296,38 +204,21 @@ if not ratios.empty:
 
     roe = ratios.copy()
 
-    roe["year"] = (
-        roe["year"]
-        .str.replace("Mar ", "", regex=False)
-    )
+    roe["year"] = roe["year"].str.replace("Mar ", "", regex=False)
 
     fig = px.line(
-
         roe,
-
         x="year",
-
         y="return_on_equity_pct",
-
         markers=True,
-
-        title="Return on Equity (%)"
-
+        title="Return on Equity (%)",
     )
 
-    st.plotly_chart(
-
-        fig,
-
-        width="stretch"
-
-    )
+    st.plotly_chart(fig, width="stretch")
 
 else:
 
-    st.warning(
-        "ROE history not available."
-    )
+    st.warning("ROE history not available.")
 # ----------------------------------
 # ROCE Information
 # ----------------------------------

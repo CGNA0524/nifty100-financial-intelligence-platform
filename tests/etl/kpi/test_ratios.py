@@ -1,21 +1,20 @@
-import pytest
 
 from src.analytics.ratios import (
-    is_financial_company,
-    net_profit_margin,
-    operating_profit_margin,
-    roce_status,
-    validate_opm,
-    return_on_equity,
-    return_on_capital_employed,
-    return_on_assets,
+    asset_turnover,
     debt_to_equity,
     high_leverage_flag,
-    interest_coverage_ratio,
     icr_label,
     icr_warning_flag,
+    interest_coverage_ratio,
+    is_financial_company,
     net_debt,
-    asset_turnover,
+    net_profit_margin,
+    operating_profit_margin,
+    return_on_assets,
+    return_on_capital_employed,
+    return_on_equity,
+    roce_status,
+    validate_opm,
 )
 
 
@@ -54,6 +53,7 @@ def test_return_on_capital_employed():
 def test_return_on_assets():
     assert return_on_assets(100, 1000) == 10.00
 
+
 def test_financial_company():
     assert is_financial_company("Financials")
 
@@ -61,9 +61,11 @@ def test_financial_company():
 def test_non_financial_company():
     assert not is_financial_company("IT")
 
+
 def test_roce_financial():
     assert roce_status(8, "Financials") == "Sector Benchmark"
-    
+
+
 def test_return_on_assets_zero_assets():
     assert return_on_assets(100, 0) is None
 
@@ -71,6 +73,7 @@ def test_return_on_assets_zero_assets():
 # -------------------------
 # Day 09 Tests
 # -------------------------
+
 
 def test_debt_to_equity():
     assert debt_to_equity(100, 200, 300) == 0.20

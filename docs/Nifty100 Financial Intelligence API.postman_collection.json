@@ -1,0 +1,1828 @@
+{
+  "info": {
+    "_postman_id": "2a723c93-e209-477b-938b-db71b316afd6",
+    "name": "Nifty100 Financial Intelligence API",
+    "description": "REST API for financial analytics, clustering and valuation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47145564",
+    "_collection_link": "https://go.postman.co/collection/47145564-2a723c93-e209-477b-938b-db71b316afd6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "/",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "item": [
+        {
+          "name": "{company_id}",
+          "item": [
+            {
+              "name": "pl",
+              "item": [
+                {
+                  "name": "Get Profit Loss",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/companies/:company_id/pl?from_year=1187&to_year=1187",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "companies",
+                        ":company_id",
+                        "pl"
+                      ],
+                      "query": [
+                        {
+                          "key": "from_year",
+                          "value": "1187"
+                        },
+                        {
+                          "key": "to_year",
+                          "value": "1187"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/pl?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "pl"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/pl?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "pl"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "bs",
+              "item": [
+                {
+                  "name": "Get Balance Sheet",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/companies/:company_id/bs?from_year=1187&to_year=1187",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "companies",
+                        ":company_id",
+                        "bs"
+                      ],
+                      "query": [
+                        {
+                          "key": "from_year",
+                          "value": "1187"
+                        },
+                        {
+                          "key": "to_year",
+                          "value": "1187"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/bs?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "bs"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/bs?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "bs"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "cashflow",
+              "item": [
+                {
+                  "name": "Get Cashflow",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/companies/:company_id/cashflow?from_year=1187&to_year=1187",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "companies",
+                        ":company_id",
+                        "cashflow"
+                      ],
+                      "query": [
+                        {
+                          "key": "from_year",
+                          "value": "1187"
+                        },
+                        {
+                          "key": "to_year",
+                          "value": "1187"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/cashflow?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "cashflow"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/cashflow?from_year=1187&to_year=1187",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "cashflow"
+                          ],
+                          "query": [
+                            {
+                              "key": "from_year",
+                              "value": "1187"
+                            },
+                            {
+                              "key": "to_year",
+                              "value": "1187"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "documents",
+              "item": [
+                {
+                  "name": "Get Documents",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/companies/:company_id/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "companies",
+                        ":company_id",
+                        "documents"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/documents",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "documents"
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/documents",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "documents"
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "ratios",
+              "item": [
+                {
+                  "name": "Get Latest Ratios",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/companies/:company_id/ratios",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "companies",
+                        ":company_id",
+                        "ratios"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/ratios",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "ratios"
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/companies/:company_id/ratios",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "companies",
+                            ":company_id",
+                            "ratios"
+                          ],
+                          "variable": [
+                            {
+                              "key": "company_id",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/companies",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "companies"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "company",
+      "item": [
+        {
+          "name": "{company_id}",
+          "item": [
+            {
+              "name": "Get Company",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/company/:company_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "company",
+                    ":company_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "company_id",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Successful Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/company/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "company",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Validation Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/company/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "company",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "financial-ratios",
+      "item": [
+        {
+          "name": "{company_id}",
+          "item": [
+            {
+              "name": "Get Financial Ratios",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/financial-ratios/:company_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "financial-ratios",
+                    ":company_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "company_id",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Successful Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/financial-ratios/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "financial-ratios",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Validation Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/financial-ratios/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "financial-ratios",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "clusters",
+      "item": [
+        {
+          "name": "Get Clusters",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clusters",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clusters"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clusters",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clusters"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cluster-summary",
+      "item": [
+        {
+          "name": "Get Cluster Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cluster-summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cluster-summary"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cluster-summary",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cluster-summary"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "screener",
+      "item": [
+        {
+          "name": "Screener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/screener?min_roe=2607.162760026478&max_de=2607.162760026478&min_fcf=2607.162760026478&sector=string&min_rev_cagr_5yr=2607.162760026478&min_pat_cagr_5yr=2607.162760026478&max_pe=2607.162760026478",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "screener"
+              ],
+              "query": [
+                {
+                  "key": "min_roe",
+                  "value": "2607.162760026478"
+                },
+                {
+                  "key": "max_de",
+                  "value": "2607.162760026478"
+                },
+                {
+                  "key": "min_fcf",
+                  "value": "2607.162760026478"
+                },
+                {
+                  "key": "sector",
+                  "value": "string"
+                },
+                {
+                  "key": "min_rev_cagr_5yr",
+                  "value": "2607.162760026478"
+                },
+                {
+                  "key": "min_pat_cagr_5yr",
+                  "value": "2607.162760026478"
+                },
+                {
+                  "key": "max_pe",
+                  "value": "2607.162760026478"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/screener?min_roe=2607.162760026478&max_de=2607.162760026478&min_fcf=2607.162760026478&sector=string&min_rev_cagr_5yr=2607.162760026478&min_pat_cagr_5yr=2607.162760026478&max_pe=2607.162760026478",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "screener"
+                  ],
+                  "query": [
+                    {
+                      "key": "min_roe",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "max_de",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "min_fcf",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "sector",
+                      "value": "string"
+                    },
+                    {
+                      "key": "min_rev_cagr_5yr",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "min_pat_cagr_5yr",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "max_pe",
+                      "value": "2607.162760026478"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "Validation Error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/screener?min_roe=2607.162760026478&max_de=2607.162760026478&min_fcf=2607.162760026478&sector=string&min_rev_cagr_5yr=2607.162760026478&min_pat_cagr_5yr=2607.162760026478&max_pe=2607.162760026478",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "screener"
+                  ],
+                  "query": [
+                    {
+                      "key": "min_roe",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "max_de",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "min_fcf",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "sector",
+                      "value": "string"
+                    },
+                    {
+                      "key": "min_rev_cagr_5yr",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "min_pat_cagr_5yr",
+                      "value": "2607.162760026478"
+                    },
+                    {
+                      "key": "max_pe",
+                      "value": "2607.162760026478"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "market-cap",
+      "item": [
+        {
+          "name": "{company_id}",
+          "item": [
+            {
+              "name": "Get Market Cap",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/market-cap/:company_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "market-cap",
+                    ":company_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "company_id",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Successful Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/market-cap/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "market-cap",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Validation Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/market-cap/:company_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "market-cap",
+                        ":company_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "company_id",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sectors",
+      "item": [
+        {
+          "name": "{sector}",
+          "item": [
+            {
+              "name": "companies",
+              "item": [
+                {
+                  "name": "Get Sector Companies",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/sectors/:sector/companies",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "sectors",
+                        ":sector",
+                        "companies"
+                      ],
+                      "variable": [
+                        {
+                          "key": "sector",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Successful Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/sectors/:sector/companies",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "sectors",
+                            ":sector",
+                            "companies"
+                          ],
+                          "variable": [
+                            {
+                              "key": "sector",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    },
+                    {
+                      "name": "Validation Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/sectors/:sector/companies",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "sectors",
+                            ":sector",
+                            "companies"
+                          ],
+                          "variable": [
+                            {
+                              "key": "sector",
+                              "value": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                      "code": 422,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Sectors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sectors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sectors"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Successful Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/sectors",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "sectors"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "peers",
+      "item": [
+        {
+          "name": "{peer_group}",
+          "item": [
+            {
+              "name": "Get Peer Group",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/peers/:peer_group",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "peers",
+                    ":peer_group"
+                  ],
+                  "variable": [
+                    {
+                      "key": "peer_group",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Successful Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/peers/:peer_group",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "peers",
+                        ":peer_group"
+                      ],
+                      "variable": [
+                        {
+                          "key": "peer_group",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Validation Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/peers/:peer_group",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "peers",
+                        ":peer_group"
+                      ],
+                      "variable": [
+                        {
+                          "key": "peer_group",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        3097,\n        5726\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        4038\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": \"\",\n      \"ctx\": {}\n    }\n  ]\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "/"
+    }
+  ]
+}

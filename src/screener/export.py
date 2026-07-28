@@ -1,14 +1,6 @@
 import pandas as pd
 import yaml
-
-from openpyxl.styles import (
-    Font,
-    PatternFill,
-    Alignment,
-    Border,
-    Side
-)
-
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 
@@ -43,61 +35,32 @@ def create_screener_workbook(results):
     # =====================================================
 
     header_fill = PatternFill(
-        fill_type="solid",
-        start_color="1F4E78",
-        end_color="1F4E78"
+        fill_type="solid", start_color="1F4E78", end_color="1F4E78"
     )
 
-    header_font = Font(
-        bold=True,
-        color="FFFFFF"
-    )
+    header_font = Font(bold=True, color="FFFFFF")
 
-    header_alignment = Alignment(
-        horizontal="center",
-        vertical="center"
-    )
+    header_alignment = Alignment(horizontal="center", vertical="center")
 
     green_fill = PatternFill(
-        fill_type="solid",
-        start_color="C6EFCE",
-        end_color="C6EFCE"
+        fill_type="solid", start_color="C6EFCE", end_color="C6EFCE"
     )
 
-    red_fill = PatternFill(
-        fill_type="solid",
-        start_color="FFC7CE",
-        end_color="FFC7CE"
-    )
+    red_fill = PatternFill(fill_type="solid", start_color="FFC7CE", end_color="FFC7CE")
 
-    thin_side = Side(
-        style="thin",
-        color="D9D9D9"
-    )
+    thin_side = Side(style="thin", color="D9D9D9")
 
-    border = Border(
-        left=thin_side,
-        right=thin_side,
-        top=thin_side,
-        bottom=thin_side
-    )
+    border = Border(left=thin_side, right=thin_side, top=thin_side, bottom=thin_side)
 
     # =====================================================
     # Workbook
     # =====================================================
 
-    with pd.ExcelWriter(
-        output_path,
-        engine="openpyxl"
-    ) as writer:
+    with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
 
         for sheet_name, dataframe in results.items():
 
-            dataframe.to_excel(
-                writer,
-                sheet_name=sheet_name[:31],
-                index=False
-            )
+            dataframe.to_excel(writer, sheet_name=sheet_name[:31], index=False)
 
             worksheet = writer.sheets[sheet_name[:31]]
 
@@ -149,9 +112,7 @@ def create_screener_workbook(results):
 
             for column_cells in worksheet.columns:
 
-                column_letter = get_column_letter(
-                    column_cells[0].column
-                )
+                column_letter = get_column_letter(column_cells[0].column)
 
                 max_length = 0
 
@@ -159,14 +120,11 @@ def create_screener_workbook(results):
 
                     if cell.value is not None:
 
-                        max_length = max(
-                            max_length,
-                            len(str(cell.value))
-                        )
+                        max_length = max(max_length, len(str(cell.value)))
 
-                worksheet.column_dimensions[
-                    column_letter
-                ].width = min(max_length + 3, 35)
+                worksheet.column_dimensions[column_letter].width = min(
+                    max_length + 3, 35
+                )
 
             # =================================================
             # Threshold Colour Coding
@@ -175,14 +133,8 @@ def create_screener_workbook(results):
             sheet_rules = config.get(sheet_name, {})
 
             headers = {
-                worksheet.cell(
-                    row=1,
-                    column=col
-                ).value: col
-                for col in range(
-                    1,
-                    worksheet.max_column + 1
-                )
+                worksheet.cell(row=1, column=col).value: col
+                for col in range(1, worksheet.max_column + 1)
             }
 
             for metric, rule in sheet_rules.items():
@@ -194,10 +146,7 @@ def create_screener_workbook(results):
 
                 for row in range(2, worksheet.max_row + 1):
 
-                    cell = worksheet.cell(
-                        row=row,
-                        column=column_no
-                    )
+                    cell = worksheet.cell(row=row, column=column_no)
 
                     if cell.value is None:
                         continue

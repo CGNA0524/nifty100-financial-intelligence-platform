@@ -1,14 +1,10 @@
-from typing import Optional
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def net_profit_margin(
-    net_profit: float,
-    sales: float
-) -> Optional[float]:
+def net_profit_margin(net_profit: float, sales: float) -> float | None:
     """
     Net Profit Margin = (Net Profit / Sales) * 100
     """
@@ -18,10 +14,7 @@ def net_profit_margin(
     return round((net_profit / sales) * 100, 2)
 
 
-def operating_profit_margin(
-    operating_profit: float,
-    sales: float
-) -> Optional[float]:
+def operating_profit_margin(operating_profit: float, sales: float) -> float | None:
     """
     Operating Profit Margin = (Operating Profit / Sales) * 100
     """
@@ -32,9 +25,7 @@ def operating_profit_margin(
 
 
 def validate_opm(
-    calculated_opm: Optional[float],
-    source_opm: Optional[float],
-    tolerance: float = 1.0
+    calculated_opm: float | None, source_opm: float | None, tolerance: float = 1.0
 ) -> bool:
     """
     Cross-check calculated OPM with source OPM.
@@ -57,10 +48,8 @@ def validate_opm(
 
 
 def return_on_equity(
-    net_profit: float,
-    equity_capital: float,
-    reserves: float
-) -> Optional[float]:
+    net_profit: float, equity_capital: float, reserves: float
+) -> float | None:
     """
     ROE = Net Profit / (Equity + Reserves) * 100
     """
@@ -74,11 +63,8 @@ def return_on_equity(
 
 
 def return_on_capital_employed(
-    ebit: float,
-    equity_capital: float,
-    reserves: float,
-    borrowings: float
-) -> Optional[float]:
+    ebit: float, equity_capital: float, reserves: float, borrowings: float
+) -> float | None:
     """
     ROCE = EBIT / (Equity + Reserves + Borrowings) * 100
     """
@@ -89,6 +75,7 @@ def return_on_capital_employed(
         return None
 
     return round((ebit / capital) * 100, 2)
+
 
 def is_financial_company(broad_sector: str) -> bool:
     """
@@ -113,10 +100,8 @@ def roce_status(roce: float, broad_sector: str) -> str:
 
     return "Needs Improvement"
 
-def return_on_assets(
-    net_profit: float,
-    total_assets: float
-) -> Optional[float]:
+
+def return_on_assets(net_profit: float, total_assets: float) -> float | None:
     """
     ROA = Net Profit / Total Assets * 100
     """
@@ -126,11 +111,10 @@ def return_on_assets(
 
     return round((net_profit / total_assets) * 100, 2)
 
+
 def debt_to_equity(
-    borrowings: float,
-    equity_capital: float,
-    reserves: float
-) -> Optional[float]:
+    borrowings: float, equity_capital: float, reserves: float
+) -> float | None:
     """
     Debt to Equity Ratio
     """
@@ -146,10 +130,7 @@ def debt_to_equity(
     return round(borrowings / equity, 2)
 
 
-def high_leverage_flag(
-    debt_equity: Optional[float],
-    broad_sector: str
-) -> bool:
+def high_leverage_flag(debt_equity: float | None, broad_sector: str) -> bool:
     """
     Returns True if D/E > 5 and company is not Financials.
     """
@@ -162,11 +143,10 @@ def high_leverage_flag(
 
     return debt_equity > 5
 
+
 def interest_coverage_ratio(
-    operating_profit: float,
-    other_income: float,
-    interest: float
-) -> Optional[float]:
+    operating_profit: float, other_income: float, interest: float
+) -> float | None:
     """
     Interest Coverage Ratio (ICR)
 
@@ -191,7 +171,7 @@ def icr_label(interest: float) -> str:
     return "Has Debt"
 
 
-def icr_warning_flag(icr: Optional[float]) -> bool:
+def icr_warning_flag(icr: float | None) -> bool:
     """
     Warning if Interest Coverage Ratio is below 1.5
     """
@@ -201,10 +181,8 @@ def icr_warning_flag(icr: Optional[float]) -> bool:
 
     return icr < 1.5
 
-def net_debt(
-    borrowings: float,
-    investments: float
-) -> float:
+
+def net_debt(borrowings: float, investments: float) -> float:
     """
     Net Debt
 
@@ -215,10 +193,7 @@ def net_debt(
     return round(borrowings - investments, 2)
 
 
-def asset_turnover(
-    sales: float,
-    total_assets: float
-) -> Optional[float]:
+def asset_turnover(sales: float, total_assets: float) -> float | None:
     """
     Asset Turnover
 
@@ -232,10 +207,7 @@ def asset_turnover(
     return round(sales / total_assets, 2)
 
 
-def free_cash_flow(
-    operating_activity: float,
-    investing_activity: float
-) -> float:
+def free_cash_flow(operating_activity: float, investing_activity: float) -> float:
     """
     Free Cash Flow (FCF)
 
@@ -249,11 +221,7 @@ def free_cash_flow(
     return round(operating_activity + investing_activity, 2)
 
 
-
-def cfo_quality_score(
-    avg_cfo: float,
-    avg_pat: float
-) -> Optional[tuple[float, str]]:
+def cfo_quality_score(avg_cfo: float, avg_pat: float) -> tuple[float, str] | None:
     """
     CFO Quality Score
 
@@ -283,9 +251,8 @@ def cfo_quality_score(
 
 
 def capex_intensity(
-    investing_activity: float,
-    sales: float
-) -> Optional[tuple[float, str]]:
+    investing_activity: float, sales: float
+) -> tuple[float, str] | None:
     """
     CapEx Intensity
 
@@ -311,10 +278,10 @@ def capex_intensity(
 
     return intensity, label
 
+
 def fcf_conversion_rate(
-    free_cash_flow: float,
-    operating_profit: float
-) -> Optional[float]:
+    free_cash_flow: float, operating_profit: float
+) -> float | None:
     """
     FCF Conversion Rate
 
@@ -329,11 +296,12 @@ def fcf_conversion_rate(
 
     return round((free_cash_flow / operating_profit) * 100, 2)
 
+
 def capital_allocation_pattern(
     operating_activity: float,
     investing_activity: float,
     financing_activity: float,
-    cfo_pat_ratio: Optional[float] = None
+    cfo_pat_ratio: float | None = None,
 ) -> str:
     """
     Capital Allocation Pattern Classifier

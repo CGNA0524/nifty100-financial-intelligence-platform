@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 # =====================================================
@@ -18,6 +19,7 @@ OUTPUT_FILE = OUTPUT_DIR / "pattern_changes.csv"
 # Load Data
 # =====================================================
 
+
 def load_data():
 
     return pd.read_csv(INPUT_FILE)
@@ -26,6 +28,7 @@ def load_data():
 # =====================================================
 # Main
 # =====================================================
+
 
 def main():
 
@@ -39,16 +42,9 @@ def main():
     print("\nRows Loaded :", len(df))
 
     # Extract calendar year
-    df["year_num"] = (
-        df["year"]
-        .astype(str)
-        .str.extract(r"(\d{4})")
-        .astype(int)
-    )
+    df["year_num"] = df["year"].astype(str).str.extract(r"(\d{4})").astype(int)
 
-    df = df.sort_values(
-        by=["company_id", "year_num"]
-    )
+    df = df.sort_values(by=["company_id", "year_num"])
 
     records = []
 
@@ -62,22 +58,24 @@ def main():
         previous = group.iloc[-2]
         latest = group.iloc[-1]
 
-        if previous["capital_allocation_pattern"] != latest["capital_allocation_pattern"]:
+        if (
+            previous["capital_allocation_pattern"]
+            != latest["capital_allocation_pattern"]
+        ):
 
-            records.append({
-                "company_id": company_id,
-                "previous_year": previous["year"],
-                "latest_year": latest["year"],
-                "previous_pattern": previous["capital_allocation_pattern"],
-                "latest_pattern": latest["capital_allocation_pattern"]
-            })
+            records.append(
+                {
+                    "company_id": company_id,
+                    "previous_year": previous["year"],
+                    "latest_year": latest["year"],
+                    "previous_pattern": previous["capital_allocation_pattern"],
+                    "latest_pattern": latest["capital_allocation_pattern"],
+                }
+            )
 
     changes = pd.DataFrame(records)
 
-    changes.to_csv(
-        OUTPUT_FILE,
-        index=False
-    )
+    changes.to_csv(OUTPUT_FILE, index=False)
 
     print("\nCompanies With Pattern Changes :", len(changes))
 

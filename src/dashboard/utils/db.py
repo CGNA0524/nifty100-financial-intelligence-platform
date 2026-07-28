@@ -1,4 +1,5 @@
 import sqlite3
+
 import pandas as pd
 import streamlit as st
 
@@ -8,6 +9,7 @@ DB_PATH = "db/nifty100.db"
 # ==========================================
 # Companies
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_companies():
@@ -20,7 +22,7 @@ def get_companies():
         FROM companies
         ORDER BY company_name
         """,
-        conn
+        conn,
     )
 
     conn.close()
@@ -31,6 +33,7 @@ def get_companies():
 # ==========================================
 # All Financial Ratios
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_all_ratios():
@@ -43,7 +46,7 @@ def get_all_ratios():
         FROM financial_ratios
         ORDER BY company_id, year
         """,
-        conn
+        conn,
     )
 
     conn.close()
@@ -54,6 +57,7 @@ def get_all_ratios():
 # ==========================================
 # Company Ratios
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_ratios(ticker, year=None):
@@ -74,11 +78,7 @@ def get_ratios(ticker, year=None):
 
     query += " ORDER BY year"
 
-    df = pd.read_sql(
-        query,
-        conn,
-        params=params
-    )
+    df = pd.read_sql(query, conn, params=params)
 
     conn.close()
 
@@ -88,6 +88,7 @@ def get_ratios(ticker, year=None):
 # ==========================================
 # Profit & Loss
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_pl(ticker):
@@ -102,7 +103,7 @@ def get_pl(ticker):
         ORDER BY year
         """,
         conn,
-        params=[ticker]
+        params=[ticker],
     )
 
     conn.close()
@@ -113,6 +114,7 @@ def get_pl(ticker):
 # ==========================================
 # Balance Sheet
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_bs(ticker):
@@ -127,7 +129,7 @@ def get_bs(ticker):
         ORDER BY year
         """,
         conn,
-        params=[ticker]
+        params=[ticker],
     )
 
     conn.close()
@@ -138,6 +140,7 @@ def get_bs(ticker):
 # ==========================================
 # Cash Flow
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_cf(ticker):
@@ -152,7 +155,7 @@ def get_cf(ticker):
         ORDER BY year
         """,
         conn,
-        params=[ticker]
+        params=[ticker],
     )
 
     conn.close()
@@ -163,6 +166,7 @@ def get_cf(ticker):
 # ==========================================
 # Sectors
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_sectors():
@@ -175,7 +179,7 @@ def get_sectors():
         FROM sectors
         ORDER BY broad_sector
         """,
-        conn
+        conn,
     )
 
     conn.close()
@@ -186,6 +190,7 @@ def get_sectors():
 # ==========================================
 # Peer Groups
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_peers(group_name):
@@ -199,7 +204,7 @@ def get_peers(group_name):
         WHERE peer_group_name = ?
         """,
         conn,
-        params=[group_name]
+        params=[group_name],
     )
 
     conn.close()
@@ -210,6 +215,7 @@ def get_peers(group_name):
 # ==========================================
 # Valuation
 # ==========================================
+
 
 @st.cache_data(ttl=600)
 def get_valuation(ticker):
@@ -222,7 +228,7 @@ def get_valuation(ticker):
         FROM sqlite_master
         WHERE type='table'
         """,
-        conn
+        conn,
     )
 
     if "valuation" not in tables["name"].values:
@@ -236,7 +242,7 @@ def get_valuation(ticker):
         WHERE company_id = ?
         """,
         conn,
-        params=[ticker]
+        params=[ticker],
     )
 
     conn.close()
@@ -280,6 +286,7 @@ def get_screener_data():
 
     return df
 
+
 @st.cache_data(ttl=600)
 def get_peer_data():
 
@@ -318,6 +325,7 @@ def get_peer_data():
     conn.close()
 
     return df
+
 
 @st.cache_data(ttl=600)
 def get_trend_data():
@@ -358,6 +366,7 @@ def get_trend_data():
 
     return df
 
+
 @st.cache_data(ttl=600)
 def get_sector_analysis():
 
@@ -389,6 +398,7 @@ def get_sector_analysis():
     conn.close()
 
     return df
+
 
 @st.cache_data(ttl=600)
 def get_capital_data():
@@ -429,6 +439,7 @@ def get_capital_data():
     conn.close()
 
     return df
+
 
 @st.cache_data(ttl=600)
 def get_report_data():

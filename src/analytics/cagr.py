@@ -1,11 +1,8 @@
-from typing import Optional, Tuple
 
 
 def calculate_cagr(
-    start_value: float,
-    end_value: float,
-    years: int
-) -> Tuple[Optional[float], Optional[str]]:
+    start_value: float, end_value: float, years: int
+) -> tuple[float | None, str | None]:
     """
     CAGR Formula:
     ((End / Start) ** (1 / Years) - 1) * 100
@@ -32,81 +29,100 @@ def calculate_cagr(
 
     return None, "INSUFFICIENT"
 
+
 def revenue_cagr(
-    start_revenue: float,
-    end_revenue: float,
-    years: int
-) -> Tuple[Optional[float], Optional[str]]:
+    start_revenue: float, end_revenue: float, years: int
+) -> tuple[float | None, str | None]:
     """
     Revenue CAGR
     """
     return calculate_cagr(start_revenue, end_revenue, years)
 
-def revenue_cagr_3yr(start_revenue: float, end_revenue: float) -> Tuple[Optional[float], Optional[str]]:
+
+def revenue_cagr_3yr(
+    start_revenue: float, end_revenue: float
+) -> tuple[float | None, str | None]:
     """
     Revenue CAGR - 3 Years
     """
     return calculate_cagr(start_revenue, end_revenue, 3)
 
 
-def revenue_cagr_5yr(start_revenue: float, end_revenue: float) -> Tuple[Optional[float], Optional[str]]:
+def revenue_cagr_5yr(
+    start_revenue: float, end_revenue: float
+) -> tuple[float | None, str | None]:
     """
     Revenue CAGR - 5 Years
     """
     return calculate_cagr(start_revenue, end_revenue, 5)
 
 
-def revenue_cagr_10yr(start_revenue: float, end_revenue: float) -> Tuple[Optional[float], Optional[str]]:
+def revenue_cagr_10yr(
+    start_revenue: float, end_revenue: float
+) -> tuple[float | None, str | None]:
     """
     Revenue CAGR - 10 Years
     """
     return calculate_cagr(start_revenue, end_revenue, 10)
 
-def pat_cagr_3yr(start_pat: float, end_pat: float) -> Tuple[Optional[float], Optional[str]]:
+
+def pat_cagr_3yr(
+    start_pat: float, end_pat: float
+) -> tuple[float | None, str | None]:
     """
     PAT CAGR - 3 Years
     """
     return calculate_cagr(start_pat, end_pat, 3)
 
 
-def pat_cagr_5yr(start_pat: float, end_pat: float) -> Tuple[Optional[float], Optional[str]]:
+def pat_cagr_5yr(
+    start_pat: float, end_pat: float
+) -> tuple[float | None, str | None]:
     """
     PAT CAGR - 5 Years
     """
     return calculate_cagr(start_pat, end_pat, 5)
 
 
-def pat_cagr_10yr(start_pat: float, end_pat: float) -> Tuple[Optional[float], Optional[str]]:
+def pat_cagr_10yr(
+    start_pat: float, end_pat: float
+) -> tuple[float | None, str | None]:
     """
     PAT CAGR - 10 Years
     """
     return calculate_cagr(start_pat, end_pat, 10)
 
+
 def pat_cagr(
-    start_pat: float,
-    end_pat: float,
-    years: int
-) -> Tuple[Optional[float], Optional[str]]:
+    start_pat: float, end_pat: float, years: int
+) -> tuple[float | None, str | None]:
     """
     PAT CAGR
     """
     return calculate_cagr(start_pat, end_pat, years)
 
-def eps_cagr_3yr(start_eps: float, end_eps: float) -> Tuple[Optional[float], Optional[str]]:
+
+def eps_cagr_3yr(
+    start_eps: float, end_eps: float
+) -> tuple[float | None, str | None]:
     """
     EPS CAGR - 3 Years
     """
     return calculate_cagr(start_eps, end_eps, 3)
 
 
-def eps_cagr_5yr(start_eps: float, end_eps: float) -> Tuple[Optional[float], Optional[str]]:
+def eps_cagr_5yr(
+    start_eps: float, end_eps: float
+) -> tuple[float | None, str | None]:
     """
     EPS CAGR - 5 Years
     """
     return calculate_cagr(start_eps, end_eps, 5)
 
 
-def eps_cagr_10yr(start_eps: float, end_eps: float) -> Tuple[Optional[float], Optional[str]]:
+def eps_cagr_10yr(
+    start_eps: float, end_eps: float
+) -> tuple[float | None, str | None]:
     """
     EPS CAGR - 10 Years
     """
@@ -114,10 +130,8 @@ def eps_cagr_10yr(start_eps: float, end_eps: float) -> Tuple[Optional[float], Op
 
 
 def eps_cagr(
-    start_eps: float,
-    end_eps: float,
-    years: int
-) -> Tuple[Optional[float], Optional[str]]:
+    start_eps: float, end_eps: float, years: int
+) -> tuple[float | None, str | None]:
     """
     EPS CAGR
     """
@@ -125,10 +139,8 @@ def eps_cagr(
 
 
 def free_cash_flow_cagr(
-    start_fcf: float,
-    end_fcf: float,
-    years: int
-) -> Tuple[Optional[float], Optional[str]]:
+    start_fcf: float, end_fcf: float, years: int
+) -> tuple[float | None, str | None]:
     """
     Free Cash Flow CAGR
     """
